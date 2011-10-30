@@ -8,7 +8,8 @@
 
 $(document).ready(function() {
     var MESSAGE_WEBSOCKET_DISABLE = 'WebsSocket disable';
-    var URL_WS_NAPTHAS = 'ws://napthats.com:8888/ws/';
+//    var URL_WS_NAPTHAS = 'ws://napthats.com:8888/ws/';
+    var URL_WS_NAPTHAS = 'ws://localhost:8888/ws/';
     var URL_HTTP_NAPTHAS = 'http://napthats.com:8888/';
     var MAP_WIDTH = 5;
     var MAP_HEIGHT = 5;
@@ -42,8 +43,10 @@ $(document).ready(function() {
         '_', 'T', ':', '+', '/',
         '_', ':', ':', ':', 'H'
     ];
+    var KEYPAD_COMMAND = ['check', 'hit', 'go b', 'cast', 'go l', 'turn b', 'go r', 'turn l', 'go f', 'turn r'];
 
     var pc_name;
+    
 
     //check WebSocket enable
     if (!window.WebSocket && !window.MozWebSocket) {
@@ -91,10 +94,26 @@ $(document).ready(function() {
         $('#text').val('');
     });
 
+    //for login
+    $('#login').click(function(e) {
+        initialize_connect($('#chara_id').val());
+    });
+
+    //for logout
+    $('#logout').click(function(e) {
+        send_message('exit');
+    });
+
     //message send with enter key
+    //and send command with keypad when textbox if empty
     $('#text').keyup(function(event){
-        if(event.keyCode == 13){
+        var keycode = event.keyCode;
+        if(keycode === 13){
             $('#send').click();
+        }
+        else if(keycode >= 96 && keycode <= 105) {
+            send_message(KEYPAD_COMMAND[keycode - 96]);
+            $('#text').val('');
         }
     });
 
@@ -121,13 +140,13 @@ $(document).ready(function() {
     }
 
     function exec_send_command(command) {
-        if (command.search(/^#start/) === 0) {
-            initialize_connect(command);
-        }
+//        if (command.search(/^#start/) === 0) {
+//            initialize_connect(command);
+//        }
     }
 
-    function initialize_connect(command) {
-        pc_name = command.substring(7);
+    function initialize_connect(chara_id) {
+        pc_name = chara_id;
         send_message('#open ' + pc_name);
         send_message('#map-iv 1');
         send_message('#status-iv 1');
