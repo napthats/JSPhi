@@ -29,11 +29,19 @@ $(document).ready(function() {
         '%': 'pcircle_lock',
         '|': 'window',
         'T': 'wood',
+        '=': 'glass',
         '{': 'door_lock',
         '@': 'rock',
         '?': 'unknown',
         's': 'unknown' //storage
     }
+    var INITIAL_MAP_LIST = [
+        '>', '%', ' ', 'o', '=',
+        '#', '|', '{', 'I', '@',
+        ' ', ' ', ' ', ' ', 'H',
+        '_', 'T', ':', '+', '/',
+        '_', ':', ':', ':', 'H'
+    ];
 
     var pc_name;
 
@@ -53,6 +61,10 @@ $(document).ready(function() {
         ws.close();
         ws = null;
     });
+
+    //for show initial map
+    show_map(INITIAL_MAP_LIST);
+    show_chara('', 2, 3);
 
     //handle message receive
     ws.addEventListener('message', function(msg) {
@@ -99,6 +111,9 @@ $(document).ready(function() {
         if (command.search(/^#map M/) === 0) {
             var map_list = parse_map_command(command);
             show_map(map_list);
+            //test for using old protocol
+            show_chara(pc_name, 2, 3);
+            //end test
         }
         else if (command.search(/^#map C/) === 0) {
             parse_chara_command(command);
@@ -145,9 +160,6 @@ $(document).ready(function() {
                 $('<img src="' + URL_HTTP_NAPTHAS + CHIP_ID_TO_NAME[map_list[x + y * MAP_WIDTH]] + '.png" class="map_chip"/>').appendTo('div#map').css({left:x * CHIP_SIZE, top:y * CHIP_SIZE});
             }
         }
-        //test for using old protocol
-        show_chara(pc_name, 2, 3);
-        //end test
     }
 
     function parse_chara_command (command) {
