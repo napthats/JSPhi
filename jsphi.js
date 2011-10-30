@@ -8,8 +8,7 @@
 
 $(document).ready(function() {
     var MESSAGE_WEBSOCKET_DISABLE = 'WebsSocket disable';
-//    var URL_WS_NAPTHAS = 'ws://napthats.com:8888/ws/';
-    var URL_WS_NAPTHAS = 'ws://localhost:8888/ws/';
+    var URL_WS_NAPTHAS = 'ws://napthats.com:8888/ws/';
     var URL_HTTP_NAPTHAS = 'http://napthats.com:8888/';
     var MAP_WIDTH = 5;
     var MAP_HEIGHT = 5;
@@ -172,7 +171,6 @@ $(document).ready(function() {
 
     function show_map(map_list) {
         var map_chip_list = $('div#map');
-//        var map_chip_list = $('div#map li');
         map_chip_list.children().remove();
         for (var x = 0; x < MAP_WIDTH; x++) {
             for (var y = 0; y < MAP_HEIGHT; y++) {

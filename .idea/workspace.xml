@@ -23,19 +23,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="jsphi.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/jsphi.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="132" column="40" selection-start="3395" selection-end="3395" vertical-scroll-proportion="0.096463025">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="jsphi.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsphi.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="51" selection-start="1160" selection-end="1160" vertical-scroll-proportion="-15.625">
+            <state line="3" column="6" selection-start="124" selection-end="124" vertical-scroll-proportion="-1.875">
               <folding />
             </state>
           </provider>
@@ -44,7 +35,16 @@
       <file leaf-file-name="jsphi.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsphi.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="0" selection-start="116" selection-end="116" vertical-scroll-proportion="0.0">
+            <state line="5" column="6" selection-start="38" selection-end="38" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jsphi.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/jsphi.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="0" selection-start="299" selection-end="299" vertical-scroll-proportion="0.08038585">
               <folding />
             </state>
           </provider>
@@ -216,28 +216,28 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/jsphi.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="116" selection-end="116" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jsphi.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="51" selection-start="1160" selection-end="1160" vertical-scroll-proportion="-15.625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tgate.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jsphi.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="6" selection-start="124" selection-end="124" vertical-scroll-proportion="-1.875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsphi.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="6" selection-start="38" selection-end="38" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/jsphi.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="40" selection-start="3395" selection-end="3395" vertical-scroll-proportion="0.096463025">
+        <state line="11" column="0" selection-start="299" selection-end="299" vertical-scroll-proportion="0.08038585">
           <folding />
         </state>
       </provider>
