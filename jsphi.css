@@ -4,8 +4,8 @@
 }
 
 #map {
-	width: 320px;
-    height: 320px;
+	width: 448px;
+    height: 448px;
 }
 
 .chara_chip {
@@ -19,4 +19,12 @@
 .chara_name {
     position: absolute;
     font-weight: 900;
+}
+
+.error_message {
+    color: Red;
+}
+
+.client_message {
+    color: Blue;
 }
