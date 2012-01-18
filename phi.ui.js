@@ -90,7 +90,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
             //set initial chara graphic
             phiUI.showObjects([{
-                type: 'charactor',
+                type: 'character',
                 id: '0',
                 x: 3,
                 y: 4,
@@ -99,7 +99,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 graphic: {
                     name: '',
                     status: 'command',
-                    gigantFlag: false
+                    gigantFlag: false,
+                    type: 'default'
                 }
             }]);
 
@@ -110,7 +111,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     $('#send').click();
                 }
                 else if(keycode >= 96 && keycode <= 105) {
-                    send_message(KEYPAD_COMMAND[keycode - 96]);
+                    //TODO: move to jsphi.js
+                    //send_message(KEYPAD_COMMAND[keycode - 96]);
+                    //end TODO
                     $('#text').val('');
                     e.preventDefault();
                 }

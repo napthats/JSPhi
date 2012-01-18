@@ -36,6 +36,7 @@ $(document).ready(function() {
     };
 
     login = function(id) {
+        ws.send('$open');
         //test using default value
         ws.send('#open ' + id);
         ws.send('#map-iv 1');
@@ -68,9 +69,6 @@ $(document).ready(function() {
     };
 
     execRecvCommand = function(command) {
-        //test
-        phiUI.showClientMessage(command.type + ' :: ' + command.data);
-        //end test
         switch (command.type) {
             case 'name':
                 //test
@@ -98,12 +96,9 @@ $(document).ready(function() {
                 ws.send(COMMAND_WS_CLOSE);
                 break;
             case 'remap':
-                ws.send('#map');
+                ws.send('#mapChipList');
                 break;
             case 'm57':
-                //test
-                break;
-                //end test
                 phiUI.showMap(command.data.map);
                 phiUI.showObjects(command.data.objectList);
                 break;
@@ -134,7 +129,7 @@ $(document).ready(function() {
             case 'trs_ok':
                 phiUI.showErrorMessage('not support transfer to other server.');
                 break;
-            case 'map':
+            case 'mapChipList':
                 phiUI.showErrorMessage('not support read old map protocol.');
                 break;
 

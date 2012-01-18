@@ -33,6 +33,19 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             end: 'end'
         }
     };
+    var CHAR_TO_OBJECT_TYPE = {
+        C: 'character',
+        B: 'background_object',
+        F: 'effect_object'
+    };
+    //test for using default
+    var numToGraphicStatus = function(num) {
+        return 'command';
+    }
+    var numToGraphicStatus = function(num) {
+        return 'default';
+    }
+    //end test
 
     //variable;
     var ns = com.napthats.jsphi;
@@ -42,15 +55,14 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     //function
     var isMultilineStartCommand;
     var isMultilineEndCommand;
+    var endMultilineMode;
+    var parseInMultilineMode;
+    var parseInNormalMode;
+    var makeErrorMessage;
 
 
 
     ns.phidmMessageParse = function(msg) {
-        var endMultilineMode;
-        var parseInMultilineMode;
-        var parseInNormalMode;
-        var makeErrorMessage;
-
         endMultilineMode = function() {
             currentMultilineMessageCommand = null;
             multilineMessageLog = [];
@@ -66,15 +78,54 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             var result = {type: command, data: ''};
             switch (command) {
                 case 'm57':
-                    if (parameters === '.') {
-                        result.data = multilineMessageLog;
-                        endMultilineMode();
-                        return result;
+                    if (!parameters) return makeErrorMessage([command, '']);
+                    switch (parameters.charAt(0)) {
+                        case '.':
+                            result.data = multilineMessageLog;
+                            endMultilineMode();
+                            return result;
+                        case 'M':
+                            result = {};
+                            result.dir = parameters.charAt(2);
+                            result.time = parseInt(parameters.substr(4,8), 16);
+                            result.mapChipList = [];
+                            var mapString = parameters.substr(13, 98);
+
+                            for (var i = 0; i < 98; i += 2) {
+                                var chip = mapString[i];
+                                var status = mapString[i + 1];
+                                result.mapChipList.push({
+                                    chip: chip,
+                                    status: {
+                                        itemType: status & 0x70,
+                                        messageFlag: status & 0xf === 0xf ? true : false,
+                                        roofFlag: status & 0x8 === 0x8 ? true : false,
+                                        areaID: status & 0x6
+                                    }
+                                });
+                            }
+                            //note: overwrite M if it exists already
+                            multilineMessageLog.map = result;
+                            return;
+                        case 'O':
+                            result = {};
+                            result.type = CHAR_TO_OBJECT_TYPE[parameters.charAt(2)];
+                            result.id = parseInt(parameters.substr(3, 4));
+                            result.x = parseInt(parameters.charAt(8));
+                            result.y = parseInt(parameters.charAt(10));
+                            result.dir = parameters.charAt(12);
+                            result.name = parameters.substr(14, 31);
+                            result.graphic = {
+                                status: numToGraphicStatus(parseInt(parameters.substr(46, 2))),
+                                name: parameters.substr(49, 15),
+                                gigantFlag: parameters.charAt(65) === '*' ? true : false,
+                                type: numToGraphicStatus(parameters.substr(67,2))
+                            };
+                            if (!(multilineMessageLog.objectList)) multilineMessageLog.objectList = [];
+                            multilineMessageLog.objectList.push(result);
+                            return;
                     }
-                    else {
-                        multilineMessageLog.push(parameters);
-                        return;
-                    }
+                    return makeErrorMessage([command, parameters])
 
                 //not support eagleeye yet
                 case 'ex-eageleeye':
@@ -172,7 +223,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 //one parameter
                 case 'cond':
                 case 'name':
-                case 'map':
+                case 'mapChipList':
                 case 'ch-srv':
                 case 'getimage':
                 case 'version-srv':

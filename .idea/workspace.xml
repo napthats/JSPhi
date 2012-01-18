@@ -23,10 +23,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="jsphi.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="jsphi.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsphi.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="0" selection-start="1442" selection-end="1442" vertical-scroll-proportion="0.26045015">
+            <state line="70" column="41" selection-start="1876" selection-end="1876" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -35,16 +35,25 @@
       <file leaf-file-name="phi.ui.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phi.ui.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="154" selection-end="154" vertical-scroll-proportion="0.0">
+            <state line="101" column="38" selection-start="3423" selection-end="3423" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="phidm.message.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="phidm.message.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/phidm.message.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="0" selection-start="1485" selection-end="1485" vertical-scroll-proportion="0.0">
+            <state line="229" column="33" selection-start="8955" selection-end="8955" vertical-scroll-proportion="0.16398714">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mymemo.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mymemo.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="38" selection-start="846" selection-end="846" vertical-scroll-proportion="-7.5">
               <folding />
             </state>
           </provider>
@@ -53,7 +62,7 @@
       <file leaf-file-name="jsphi.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsphi.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="50" selection-start="961" selection-end="961" vertical-scroll-proportion="0.0">
+            <state line="36" column="0" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-22.5">
               <folding />
             </state>
           </provider>
@@ -71,34 +80,7 @@
       <file leaf-file-name="websocket.connector.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/websocket.connector.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="57" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="0" selection-start="367" selection-end="367" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test-AnalyzeRT.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/test-AnalyzeRT.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="0" selection-start="1301" selection-end="1301" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="qunit.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/qunit/qunit.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="2" selection-start="63" selection-end="63" vertical-scroll-proportion="0.0">
+            <state line="24" column="27" selection-start="652" selection-end="652" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -129,11 +111,13 @@
         <option value="$PROJECT_DIR$/phidm.message.parser.js" />
         <option value="$PROJECT_DIR$/phi.message.js" />
         <option value="$PROJECT_DIR$/phi.command.executor.js" />
-        <option value="$PROJECT_DIR$/jsphi.html" />
         <option value="$PROJECT_DIR$/jsphi.css" />
+        <option value="$PROJECT_DIR$/websocket.connector.js" />
         <option value="$PROJECT_DIR$/phi.ui.js" />
-        <option value="$PROJECT_DIR$/phidm.message.js" />
         <option value="$PROJECT_DIR$/jsphi.js" />
+        <option value="$PROJECT_DIR$/jsphi.html" />
+        <option value="$PROJECT_DIR$/mymemo.txt" />
+        <option value="$PROJECT_DIR$/phidm.message.js" />
       </list>
     </option>
   </component>
@@ -172,34 +156,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="JSPhi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="untitled" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JSPhi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="untitled" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JSPhi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qunit" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -263,6 +219,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Phing Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952183" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10422234" sideWeight="0.043659043" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10422234" sideWeight="0.9480249" order="0" side_tool="false" content_ui="tabs" />
@@ -272,7 +229,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -326,46 +282,9 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/qunit/qunit.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/headless.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jsphi.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="50" selection-start="961" selection-end="961" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jsphi.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="0" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/websocket.connector.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="57" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="367" selection-end="367" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test-AnalyzeRT.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="0" selection-start="1301" selection-end="1301" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/qunit/qunit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="2" selection-start="63" selection-end="63" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Chips/chara.png">
@@ -373,23 +292,44 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phidm.message.js">
+    <entry file="file://$PROJECT_DIR$/websocket.connector.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="0" selection-start="1485" selection-end="1485" vertical-scroll-proportion="0.0">
+        <state line="24" column="27" selection-start="652" selection-end="652" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phi.ui.js">
+    <entry file="file://$PROJECT_DIR$/jsphi.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="154" selection-end="154" vertical-scroll-proportion="0.0">
+        <state line="36" column="0" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-22.5">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jsphi.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="0" selection-start="1442" selection-end="1442" vertical-scroll-proportion="0.26045015">
+        <state line="70" column="41" selection-start="1876" selection-end="1876" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mymemo.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="38" selection-start="846" selection-end="846" vertical-scroll-proportion="-7.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phi.ui.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="38" selection-start="3423" selection-end="3423" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phidm.message.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="229" column="33" selection-start="8955" selection-end="8955" vertical-scroll-proportion="0.16398714">
           <folding />
         </state>
       </provider>
