@@ -102,6 +102,12 @@ $(document).ready(function() {
                 phiUI.showMap(command.data.map);
                 phiUI.showObjects(command.data.objectList);
                 break;
+            case 'list':
+            case 'more':
+                command.data.forEach(function(element, index, array) {
+                    phiUI.showMessage(element);
+                });
+                break;
 
             //should deal with later
             case 'priv':
@@ -134,16 +140,10 @@ $(document).ready(function() {
                 break;
 
             //just ignore
-            case 'more':
-            case 'end-more':
-                //TODO:call phiUI.showMessage or something
             case 'attack':
             case 'end-at':
             case 'magic':
             case 'end-mg':
-            case 'list':
-            case 'end-list':
-                //TODO:call phiUI.showMessage or something
             case 'version-srv':
             case 'version-dm':
             case 'leave-win':
@@ -159,6 +159,8 @@ $(document).ready(function() {
                 break;
 
             //should not receive
+            case 'end-list':
+            case 'end-more':
             case 'code-euc-ok':
             case 'code-utf-ok':
             case 'code-sfis-ok':
