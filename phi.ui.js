@@ -13,7 +13,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
 (function() {
     var ns = com.napthats.jsphi;
-    var URL_HTTP_NAPTHAS = 'http://napthats.com:8888/';
+    var URL_HTTP_NAPTHAS = 'http://napthats.com/chips/';
     var KEYPAD_COMMAND = ['check', 'hit', 'go b', 'cast', 'go l', 'turn b', 'go r', 'turn l', 'go f', 'turn r'];
     var MAP_WIDTH = 7;
     var MAP_HEIGHT = 7;
@@ -49,6 +49,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
+    //test
+    var km = function(){};
+    //end test
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -113,6 +116,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 else if(keycode >= 96 && keycode <= 105) {
                     //TODO: move to jsphi.js
                     //send_message(KEYPAD_COMMAND[keycode - 96]);
+                    km(KEYPAD_COMMAND[keycode - 96]);
                     //end TODO
                     $('#text').val('');
                     e.preventDefault();
@@ -134,6 +138,11 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'logout':
                     $('#logout').click(function(e){func()});
                     break;
+                //test
+                case 'keypad':
+                    km = function(kc){func(kc)};
+                    break;
+                //end test
                 default:
                     phiUI.showError('assertion error.');
                     break;

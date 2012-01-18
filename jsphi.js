@@ -33,6 +33,9 @@ $(document).ready(function() {
         phiUI.bind('send', function(msg){ws.send(msg)});
         phiUI.bind('login', function(id){login(id)});
         phiUI.bind('logout', function(){logout()});
+        //test
+        phiUI.bind('keypad', function(kc){ws.send(kc)});
+        //end test
     };
 
     login = function(id) {
