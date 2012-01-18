@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 
     initialize = function() {
-        ws = NS_WEBSOCKET.connectWebSocket('ws://localhost:8888/ws/', recvMessage);
+        ws = NS_WEBSOCKET.connectWebSocket('ws://napthats.com/ws/', recvMessage);
         phiUI = NS_JSPHI.makePhiUI();
         phiUI.initialize();
         phiUI.bind('send', function(msg){ws.send(msg)});

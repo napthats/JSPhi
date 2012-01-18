@@ -26,7 +26,7 @@
       <file leaf-file-name="jsphi.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsphi.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="41" selection-start="1876" selection-end="1876" vertical-scroll-proportion="0.0">
+            <state line="148" column="26" selection-start="4476" selection-end="4476" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -35,7 +35,7 @@
       <file leaf-file-name="phi.ui.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phi.ui.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="38" selection-start="3423" selection-end="3423" vertical-scroll-proportion="0.0">
+            <state line="126" column="22" selection-start="4212" selection-end="4212" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -44,7 +44,7 @@
       <file leaf-file-name="phidm.message.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/phidm.message.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="229" column="33" selection-start="8955" selection-end="8955" vertical-scroll-proportion="0.16398714">
+            <state line="32" column="0" selection-start="737" selection-end="737" vertical-scroll-proportion="0.30546623">
               <folding />
             </state>
           </provider>
@@ -59,10 +59,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jsphi.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsphi.html">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-22.5">
+            <state line="37" column="14" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-23.125">
               <folding />
             </state>
           </provider>
@@ -87,7 +87,7 @@
         </entry>
       </file>
       <file leaf-file-name="chara.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Chips/chara.png">
+        <entry file="file://$PROJECT_DIR$/chips/chara.png">
           <provider selected="true" editor-type-id="images">
             <state />
           </provider>
@@ -113,11 +113,11 @@
         <option value="$PROJECT_DIR$/phi.command.executor.js" />
         <option value="$PROJECT_DIR$/jsphi.css" />
         <option value="$PROJECT_DIR$/websocket.connector.js" />
-        <option value="$PROJECT_DIR$/phi.ui.js" />
+        <option value="$PROJECT_DIR$/mymemo.txt" />
         <option value="$PROJECT_DIR$/jsphi.js" />
         <option value="$PROJECT_DIR$/jsphi.html" />
-        <option value="$PROJECT_DIR$/mymemo.txt" />
         <option value="$PROJECT_DIR$/phidm.message.js" />
+        <option value="$PROJECT_DIR$/phi.ui.js" />
       </list>
     </option>
   </component>
@@ -277,7 +277,7 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Chips/tgate.png">
+    <entry file="file://$PROJECT_DIR$/chips/tgate.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
@@ -287,7 +287,7 @@
         <state line="30" column="0" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Chips/chara.png">
+    <entry file="file://$PROJECT_DIR$/chips/chara.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
@@ -299,16 +299,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jsphi.html">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-22.5">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jsphi.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="41" selection-start="1876" selection-end="1876" vertical-scroll-proportion="0.0">
+        <state line="37" column="14" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-23.125">
           <folding />
         </state>
       </provider>
@@ -322,14 +315,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phi.ui.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="38" selection-start="3423" selection-end="3423" vertical-scroll-proportion="0.0">
+        <state line="126" column="22" selection-start="4212" selection-end="4212" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsphi.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="26" selection-start="4476" selection-end="4476" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/phidm.message.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="229" column="33" selection-start="8955" selection-end="8955" vertical-scroll-proportion="0.16398714">
+        <state line="32" column="0" selection-start="737" selection-end="737" vertical-scroll-proportion="0.30546623">
           <folding />
         </state>
       </provider>

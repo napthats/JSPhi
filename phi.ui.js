@@ -38,7 +38,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '{': 'door_lock',
         '@': 'rock',
         '?': 'unknown',
-        's': 'unknown' //storage
+        //test for strage
+        's': 'unknown'
+        //end test
     }
     var INITIAL_MAP_LIST = [
         '?', '?', '?', '?', '?', '?', '?',
@@ -49,7 +51,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
-    //test
+    //test for keypad control
     var km = function(){};
     //end test
 
@@ -107,7 +109,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 }
             }]);
 
-            //test keypad control
+            //test for keypad control
             $('#text').keydown(function(e){
                 var keycode = e.keyCode;
                 if(keycode === 13){
@@ -122,6 +124,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     e.preventDefault();
                 }
             });
+            //end test
         };
 
         phiUI.bind = function(type, func) {

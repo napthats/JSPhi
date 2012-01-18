@@ -17,22 +17,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         type: 'ERROR'
     };
     var TYPE_OF_NORMAL_MESSAGE = '#NORMAL_MESSAGE#';
-    var MULTILINE_START_END_COMMAND = {
-        's-edit': '.',
-        'm-edit': '.',
-        more: 'end-more',
-        list: 'end-list'
-    };
-    var MULTILINE_COMMAND = {
-        m57: {
-            start: '',
-            end: '.'
-        },
-        'ex-eagleeye': {
-            start: 'start',
-            end: 'end'
-        }
-    };
     var CHAR_TO_OBJECT_TYPE = {
         C: 'character',
         B: 'background_object',
@@ -53,8 +37,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var multilineMessageLog = [];
 
     //function
-    var isMultilineStartCommand;
-    var isMultilineEndCommand;
     var endMultilineMode;
     var parseInMultilineMode;
     var parseInNormalMode;
