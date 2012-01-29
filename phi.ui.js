@@ -51,6 +51,39 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
+    var PHI_TAG_TO_HTML_TAG = {
+        'color': {
+            'red': '<font color=red>',
+            'blue': '<font color=blue>',
+            'navy': '<font color=navy>',
+            'cyan': '<font color=cyan>',
+            'purple': '<font color=purple>',
+            'magenta': '<font color=magenta>',
+            'yellow': '<font color=pale>',
+            'green': '',
+            'lime': '',
+            'teal': '',
+            'gray': '',
+            'silver': '',
+            'maroon': '',
+            'olive': '',
+            'white': ''
+        },
+        'style': {
+            'bold': '<font style=bold',
+            'italic': '',
+            'strike': '',
+            'under': '',
+            'sup': '',
+            'sub': '',
+            '.': ''
+        },
+        'size': {
+            'large': '',
+            'small': ''
+        },
+        '.': ''
+    };
     //test for keypad control
     var km = function(){};
     //end test
@@ -153,16 +186,42 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         phiUI.showMessage = function(msg) {
-            $('#log').prepend("<div class='message'>"+msg+"</div>");
+            var spanTagNum = 0;
+            var commentList = msg.match(/\/\*.*?\*\//g);
+            if (commentList) {
+                commentList.forEach(function(element, index, array) {
+                    if (element.match(/^\/\*(?:color=|style=|size=)|^\/\*\.\*\/$/)) {
+                        var spanTag = element.split('=').join('_');
+                        spanTag = spanTag.split('.').join('period');
+                        spanTag = spanTag.split('<').join('');
+                        spanTag = spanTag.split('>').join('');
+                        spanTag = spanTag.split('-').join('minus_');
+                        spanTag = spanTag.split('+').join('plus_');
+                        spanTag = spanTag.replace(/^\/\*/, '<span class="');
+                        spanTag = spanTag.replace(/\*\/$/, '">');
+                        msg = msg.split(element).join(spanTag);
+                        spanTagNum++;
+                    }
+                    else {
+                        msg = msg.split(element).join('');
+                    }
+                });
+            }
+            for (var i = 0; i < spanTagNum; i++) {
+                msg = msg + '</span>';
+            }
+            $('#log').append('<div class="message">'+msg+'</div>');
+            $('#log').scrollTop(1000000);
         };
 
         phiUI.showClientMessage = function(msg) {
-            $('#log').prepend("<div class='client_message'>"+msg+"</div>");
+            $('#log').append('<div class="client_message">'+msg+'</div>');
+            $('#log').scrollTop(1000000);
         };
 
         phiUI.showErrorMessage = function(msg) {
-            $('#log').prepend("<div class='error_message'>"+msg+"</div>");
-            //alert(msg);
+            $('#log').append('<div class="error_message">'+msg+'</div>');
+            $('#log').scrollTop(1000000);
         };
 
         return phiUI;

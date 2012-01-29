@@ -2,16 +2,18 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
-<script type="text/javascript" src="websocket.connector.js"></script>
-<script type="text/javascript" src="phi.ui.js"></script>
-<script type="text/javascript" src="phidm.message.js"></script>
-<script type="text/javascript" src="jsphi.js"></script>
-<link rel="stylesheet" href="jsphi.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+    <script type="text/javascript" src="websocket.connector.js"></script>
+    <script type="text/javascript" src="phi.ui.js"></script>
+    <script type="text/javascript" src="phidm.message.js"></script>
+    <script type="text/javascript" src="jsphi.js"></script>
+    <link rel="stylesheet" href="jsphi.css" type="text/css" />
+    <title>JSPhi (Phantasmal Island Client)</title>
 </head>
 <body>
     <div id="map"></div>
+    <pre><div id="log"></div></pre>
     <div>
         <select name="chara_id" id="chara_id">
             <option value="guest1">guest1</option>
@@ -25,13 +27,12 @@
             <option value="guest9">guest9</option>
             <option value="guest10">guest10</option>
         </select>
-        <input type="button" id="login" value="login"></input>
-        <input type="button" id="logout" value="logout"></input>
+        <input type="button" id="login" value="login">
+        <input type="button" id="logout" value="logout">
     </div>
     <div id="send_textbox">
-        <input type="text" id="text"></input><input type="button" id="send" value="send"></input>
+        <input type="text" id="text"><input type="button" id="send" value="send">
     </div>
-    <div id="log"></div>
     <div><pre>
 send(Enter)で発言
 textboxにフォーカスしてテンキーで操作

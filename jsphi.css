@@ -28,3 +28,105 @@
 .client_message {
     color: Blue;
 }
+
+#log {
+  overflow: scroll;
+  width: 800px;
+  height: 400px;
+}
+
+.color_red {
+    color: red;
+}
+.corlo_blue {
+    color: blue;
+}
+.color_navy {
+    color: navy;
+}
+.color_cyan {
+    color: cyan;
+}
+.color_purple {
+    color: purple;
+}
+.color_magenta {
+    color: magenta;
+}
+.color_yellow {
+    color: yellow;
+}
+.color_green {
+    color: green;
+}
+.color_lime {
+    color: lime;
+}
+.color_teal {
+    color: teal;
+}
+.color_gray {
+    color: gray;
+}
+.color_silver {
+    color: silver;
+}
+.color_maroon {
+    color: maroon;
+}
+.color_olive {
+    color: olive;
+}
+.color_white {
+    color: white;
+}
+.color_plus_hp {
+    color: blue;
+}
+.color_minus_hp {
+    color: red;
+}
+.color_period {
+    color: black;
+}
+.style_bold {
+    font-weight: bold;
+}
+.style_italic {
+    font-style: italic;
+}
+.style_strike {
+    text-decoration: line-through;
+}
+.style_under {
+    text-decoration: underline;
+}
+.style_sup {
+    vertical-align: text-top;
+}
+.style_sub {
+    vertical-align: sub;
+}
+.style_period {
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    vertical-align: baseline;
+}
+.size_large {
+    font-size: x-large;
+}
+.size_small {
+    font-size: x-small;
+}
+.size_period {
+    font-size: medium;
+}
+.period {
+    color: black;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    vertical-align: baseline;
+    font-size: medium;
+}
