@@ -51,42 +51,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
-    var PHI_TAG_TO_HTML_TAG = {
-        'color': {
-            'red': '<font color=red>',
-            'blue': '<font color=blue>',
-            'navy': '<font color=navy>',
-            'cyan': '<font color=cyan>',
-            'purple': '<font color=purple>',
-            'magenta': '<font color=magenta>',
-            'yellow': '<font color=pale>',
-            'green': '',
-            'lime': '',
-            'teal': '',
-            'gray': '',
-            'silver': '',
-            'maroon': '',
-            'olive': '',
-            'white': ''
-        },
-        'style': {
-            'bold': '<font style=bold',
-            'italic': '',
-            'strike': '',
-            'under': '',
-            'sup': '',
-            'sub': '',
-            '.': ''
-        },
-        'size': {
-            'large': '',
-            'small': ''
-        },
-        '.': ''
-    };
-    //test for keypad control
+    //keypad control (tentative)
     var km = function(){};
-    //end test
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -142,7 +108,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 }
             }]);
 
-            //test for keypad control
+            //keypad control (tentative)
             $('#text').keydown(function(e){
                 var keycode = e.keyCode;
                 if(keycode === 13){
@@ -157,9 +123,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     e.preventDefault();
                 }
             });
-            //end test
         };
 
+        //bind callback for UI event
         phiUI.bind = function(type, func) {
             switch (type) {
                 case 'send':
@@ -174,18 +140,20 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'logout':
                     $('#logout').click(function(e){func()});
                     break;
-                //test
+                //tentative
                 case 'keypad':
                     km = function(kc){func(kc)};
                     break;
-                //end test
                 default:
                     phiUI.showError('assertion error.');
                     break;
             }
         };
 
+        //show normal message with phi style tags
         phiUI.showMessage = function(msg) {
+            msg = msg.split('<').join('&lt;');
+            msg = msg.split('&').join('&amp;');
             var spanTagNum = 0;
             var commentList = msg.match(/\/\*.*?\*\//g);
             if (commentList) {
@@ -193,8 +161,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     if (element.match(/^\/\*(?:color=|style=|size=)|^\/\*\.\*\/$/)) {
                         var spanTag = element.split('=').join('_');
                         spanTag = spanTag.split('.').join('period');
-                        spanTag = spanTag.split('<').join('');
-                        spanTag = spanTag.split('>').join('');
                         spanTag = spanTag.split('-').join('minus_');
                         spanTag = spanTag.split('+').join('plus_');
                         spanTag = spanTag.replace(/^\/\*/, '<span class="');
@@ -215,11 +181,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         phiUI.showClientMessage = function(msg) {
+            msg = msg.split('<').join('&lt;');
+            msg = msg.split('&').join('&amp;');
             $('#log').append('<div class="client_message">'+msg+'</div>');
             $('#log').scrollTop(1000000);
         };
 
         phiUI.showErrorMessage = function(msg) {
+            msg = msg.split('<').join('&lt;');
+            msg = msg.split('&').join('&amp;');
             $('#log').append('<div class="error_message">'+msg+'</div>');
             $('#log').scrollTop(1000000);
         };

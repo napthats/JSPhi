@@ -35,6 +35,10 @@
   height: 400px;
 }
 
+#text {
+    width: 800px;
+}
+
 .color_red {
     color: red;
 }
@@ -83,6 +87,15 @@
 .color_plus_hp {
     color: blue;
 }
+
+.color_plus_mp {
+    color: blue;
+}
+
+.color_minus_mp {
+    color: red;
+}
+
 .color_minus_hp {
     color: red;
 }

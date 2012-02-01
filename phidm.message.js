@@ -22,14 +22,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         B: 'background_object',
         F: 'effect_object'
     };
-    //test for using default
+    //using default (tentative)
     var numToGraphicStatus = function(num) {
         return 'command';
     }
     var numToGraphicStatus = function(num) {
         return 'default';
     }
-    //end test
 
     //variable;
     var ns = com.napthats.jsphi;
@@ -41,7 +40,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var parseInMultilineMode;
     var parseInNormalMode;
     var makeErrorMessage;
-
+    var parseWebsocketProxyMessage;
 
 
     ns.phidmMessageParse = function(msg) {
@@ -199,6 +198,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'user':
                 case 'priv':
                 case 'mapset-define':
+                case 'ch-srv':
                     result.data = parameters.split(' ', 2);
                     return result;
 
@@ -206,7 +206,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'cond':
                 case 'name':
                 case 'mapChipList':
-                case 'ch-srv':
                 case 'getimage':
                 case 'version-srv':
                 case 'leave-win':
@@ -224,12 +223,22 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             }
         };
 
+        parseWebsocketProxyMessage = function(command) {
+            var result = {type: '$' + command, data: ''};
+            switch (command) {
+                case 'cnt-no':
+                default:
+                    return result;
+            }
+        };
+
 
         if (!msg) return;
-        //special command of phi_dm
+        //special command of phi_dm or WebsocketProxy
         if (msg.charAt(0) === '#') {
             msg = msg.replace(/\r|\n/g, '');
             msg = msg.replace(/\s+$/, '');
+            if (msg.charAt(1) === '$') return parseWebsocketProxyMessage(msg.substring(2));
             //split at the first space
             var firstSpaceIdx = msg.indexOf(' ');
             var command = firstSpaceIdx === -1 ? msg.substring(1) : msg.substring(1, firstSpaceIdx);

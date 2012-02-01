@@ -12,11 +12,14 @@ $(document).ready(function() {
     var NS_JSPHI = com.napthats.jsphi;
     var NS_WEBSOCKET = com.napthats.websocket;
     var COMMAND_WS_CLOSE = '$close';
-    var TYPE_OF_NORMAL_MESSAGE = '#NORMAL_MESSAGE#';
+    var TYPE_NORMAL_MESSAGE = '#NORMAL_MESSAGE#';
+    var CLIENT_VERSION = '05103010';
+    var URL_WEBSOCKT = 'ws://localhost:8080/ws/';
 
     //variable
     var phiUI;
     var ws;
+    var userId;
 
     //function
     var recvMessage;
@@ -24,28 +27,101 @@ $(document).ready(function() {
     var execRecvCommand;
     var login;
     var logout;
+    var makeTransferExec;
+    var sendInitialMessage;
+    var spExecRecvCommand;
 
 
     initialize = function() {
-        //ws = NS_WEBSOCKET.connectWebSocket('ws://napthats.com/ws/', recvMessage);
-        ws = NS_WEBSOCKET.connectWebSocket('ws://localhost:8080/ws/', recvMessage);
+        ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
         phiUI = NS_JSPHI.makePhiUI();
         phiUI.initialize();
         phiUI.bind('send', function(msg){ws.send(msg)});
         phiUI.bind('login', function(id){login(id)});
         phiUI.bind('logout', function(){logout()});
-        //test
+        //tentative support
         phiUI.bind('keypad', function(kc){ws.send(kc)});
-        //end test
     };
 
     login = function(id) {
-        ws.send('$open');
-        //test using default value
+        userId = id;
         ws.send('#open ' + id);
+        sendInitialMessage();
+    };
+
+    logout = function() {
+        spExecRecvCommand = null;
+        ws.send('exit');
+    };
+
+    makeTransferExec = function(option) {
+        var state = 'ch-srv';
+        var ip = option[0];
+        var port = option.length === 2 ? option[1] : '20017';
+
+        return function(command) {
+            switch (state) {
+                case 'ch-srv':
+                    phiUI.showClientMessage('Reserve transfer...');
+                    ws.send('$sub$:' + ip + ':' + port);
+                    ws.send('$flip$');
+                    ws.send('#reserve ' + userId);
+                    state = 'reserve';
+                    return;
+                case 'reserve':
+                    if (command.type === 'rsv-ok') {
+                        phiUI.showClientMessage('Connecting...');
+                        ws.send('$flip$');
+                        ws.send('#trans ' + ip + ' ' + port);
+                        state = 'trans';
+                        return;
+                    }
+                    else if (command.type === '$cnt-no') {
+                        phiUI.showErrorMessage('Cannot find a server.');
+                        ws.send('$flip$');
+                        ws.send('#no-srv');
+                        ws.send('$closesub$');
+                        spExecRecvCommand = null;
+                        return;
+                    }
+                    else {
+                        phiUI.showErrorMessage('Unexpected command in transfer.');
+                        ws.send('$closesub$');
+                        spExecRecvCommand = null;
+                        return;
+                    }
+                case 'trans':
+                    if (command.type === 'trs-ok') {
+                        phiUI.showClientMessage('Transfer completed.');
+                        ws.send('$flip$');
+                        ws.send('#ch-srv-ok');
+                        sendInitialMessage();
+                        spExecRecvCommand = null;
+                        ws.send('$closesub$');
+                        return;
+                    }
+                    else if (command.type === 'trs-no') {
+                        phiUI.showErrorMessage('Transfer failed.');
+                        ws.send('#ch-srv-no');
+                        spExecRecvCommand = null;
+                        ws.send('$closesub$');
+                        return;
+                    }
+                    else {
+                        phiUI.showErrorMessage('Unexpected command in transfer.');
+                        ws.send('$closesub$');
+                        spExecRecvCommand = null;
+                        return;
+                    }
+            }
+        }
+    };
+
+    sendInitialMessage = function() {
+        //test default setting
         ws.send('#map-iv 1');
         ws.send('#status-iv 1');
-        ws.send('#version-cli 05107100');
+        ws.send('#version-cli ' + CLIENT_VERSION);
         ws.send('#ex-switch eagleeye=form');
         ws.send('#ex-map size=57');
         ws.send('#ex-map style=turn');
@@ -53,18 +129,16 @@ $(document).ready(function() {
         ws.send('#ex-switch ex-list-mode-end=true');
         ws.send('#ex-switch ex-disp-magic=false');
         //end test
-    };
-
-    logout = function() {
-        ws.send('exit');
-    };
-
+    }
 
     recvMessage = function(msg){
         var phidmMessage = NS_JSPHI.phidmMessageParse(msg.data);
         if (!phidmMessage) return; //message does not exist or not end
 
-        if (phidmMessage.type === TYPE_OF_NORMAL_MESSAGE) {
+        if (spExecRecvCommand) {
+            spExecRecvCommand(phidmMessage);
+        }
+        else if (phidmMessage.type === TYPE_NORMAL_MESSAGE) {
             phiUI.showMessage(phidmMessage.data);
         }
         else {
@@ -93,14 +167,16 @@ $(document).ready(function() {
                 //end test
                 break;
             case 'x':
-                phiUI.showClientMessage('forced disconnection.');
+                phiUI.showClientMessage('Forced disconnection.');
+                spExecRecvCommand = null;
                 ws.send(COMMAND_WS_CLOSE);
                 break;
             case 'close':
                 ws.send(COMMAND_WS_CLOSE);
+                spExecRecvCommand = null;
                 break;
             case 'remap':
-                ws.send('#mapChipList');
+                ws.send('#map');
                 break;
             case 'm57':
                 phiUI.showMap(command.data.map);
@@ -112,10 +188,16 @@ $(document).ready(function() {
                     phiUI.showMessage(element);
                 });
                 break;
+            case 'ch-srv':
+                (spExecRecvCommand = makeTransferExec(command.data))();
+                break;
+            case '$cnt-no':
+                phiUI.showErrorMessage('Cannot connect a server.');
+                break;
 
             //should deal with later
             case 'priv':
-                phiUI.showErrorMessage('not support priv.');
+                phiUI.showErrorMessage('Not support priv.');
                 break;
             case 'ex-map':
                 //phiUI.showErrorMessage('not support ex-map.');
@@ -124,23 +206,23 @@ $(document).ready(function() {
                 //phiUI.showErrorMessage('not support ex-switch.');
                 break;
             case 'ex-eagleeye':
-                phiUI.showErrorMessage('not support eagleeye.');
+                phiUI.showErrorMessage('Not support eagleeye.');
                 break;
             case 'set-user-id':
-                phiUI.showClientMessage('not support registration.');
+                phiUI.showClientMessage('Not support registration.');
                 break;
             case 's-edit':
             case 'm-edit':
             case '.':
-                phiUI.showErrorMessage('not support edit.');
+                phiUI.showErrorMessage('Not support edit.');
                 break;
-            case 'ch_srv':
+            case 'rsv-ok':
             case 'trs_no':
             case 'trs_ok':
-                phiUI.showErrorMessage('not support transfer to other server.');
+                phiUI.showErrorMessage('Unexpected transfer command.');
                 break;
-            case 'mapChipList':
-                phiUI.showErrorMessage('not support read old map protocol.');
+            case 'map':
+                phiUI.showErrorMessage('Not support old map protocol.');
                 break;
 
             //just ignore
@@ -173,14 +255,14 @@ $(document).ready(function() {
             case 'imagelist':
             case 'getimage':
             case 'end-edit':
-                phiUI.showErrorMessage('receive deprecated command from dm.');
+                phiUI.showErrorMessage('Receive deprecated command from dm.');
                 break;
             default:
-                phiUI.showErrorMessage('receive unknown command from dm.: ' + command.type + ', ' + command.data);
+                phiUI.showErrorMessage('Receive unknown command from dm.: ' + command.type + ', ' + command.data);
                 break;
         }
 
-    }
+    };
 
     initialize();
 });
