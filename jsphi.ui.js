@@ -135,7 +135,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             for (var i = 0; i < objectList.length; i++) {
                 var phiObject = objectList[i];
                 //using default character chip(tentative)
-                ctx.drawImage(charaChipList.getImage('chara'), phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+                //ctx.drawImage(charaChipList.getImage('chara'), phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+                //debug
+                var tmp = document.createElement('canvas').getContext('2d');
+                tmp.width = CHIP_SIZE;
+                tmp.height = CHIP_SIZE;
+                tmp.drawImage(charapng, 0, 0);
+                var tmp2 = tmp.getImageData(0,0,CHIP_SIZE,CHIP_SIZE);
+                ctx.putImageData(tmp2, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+                //end debug
                 ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
             }
         };

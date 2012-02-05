@@ -8,6 +8,10 @@
     height: 240px;
 }
 
+#pcgl {
+    font-size: small;
+}
+
 .chara_chip {
     position: absolute;
 }
