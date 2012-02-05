@@ -11,7 +11,7 @@ $(document).ready(function() {
     //const
     var NS_JSPHI = com.napthats.jsphi;
     var NS_WEBSOCKET = com.napthats.websocket;
-    var COMMAND_WS_CLOSE = '$close';
+    var COMMAND_WS_CLOSE = '$close$';
     var TYPE_NORMAL_MESSAGE = '#NORMAL_MESSAGE#';
     var CLIENT_VERSION = '05103010';
     var URL_WEBSOCKT = 'ws://localhost:8080/ws/';
@@ -129,7 +129,7 @@ $(document).ready(function() {
         ws.send('#ex-switch ex-list-mode-end=true');
         ws.send('#ex-switch ex-disp-magic=false');
         //end test
-    }
+    };
 
     recvMessage = function(msg){
         var phidmMessage = NS_JSPHI.phidmMessageParse(msg.data);

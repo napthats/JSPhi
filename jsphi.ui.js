@@ -41,7 +41,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         //test for strage
         's': 'unknown'
         //end test
-    }
+    };
     var INITIAL_MAP_LIST = [
         '?', '?', '?', '?', '?', '?', '?',
         '?', '>', '%', ' ', 'o', '=', '?',

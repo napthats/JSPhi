@@ -36,6 +36,8 @@ if (!com.napthats.websocket) com.napthats.websocket = {};
             ws = null;
         });
 
-        return ws;
+        return {send: function(msg){
+            ws.send(msg);
+        }};
     }
 })();
