@@ -7,7 +7,7 @@
  */
 
 
-$(document).ready(function() {
+$(window).load(function() {
     //const
     var NS_JSPHI = com.napthats.jsphi;
     var NS_WEBSOCKET = com.napthats.websocket;

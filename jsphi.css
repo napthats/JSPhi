@@ -8,6 +8,10 @@
     height: 240px;
 }
 
+#graphic {
+    display:none;
+}
+
 #pcgl {
     font-size: small;
 }

@@ -11,7 +11,7 @@ if (!com) com = {};
 if (!com.napthats) com.napthats = {};
 if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
-(function() {
+$(window).load(function() {
     var ns = com.napthats.jsphi;
     var KEYPAD_COMMAND = ['check', 'hit', 'go b', 'cast', 'go l', 'turn b', 'go r', 'turn l', 'go f', 'turn r'];
     var MAP_WIDTH = 7;
@@ -54,10 +54,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     ];
     //keypad control (tentative)
     var km = function(){};
-    var tileSheet = new Image();
-    tileSheet.src = 'chips/default.bmp';
-    var charapng = new Image();
-    charapng.src = 'chips/chara.png';
+    var tileSheet = document.images[0];
+    var charapng = document.images[1];
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -261,6 +259,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         return phiUI;
     };
-})();
+});
 
 
