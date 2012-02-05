@@ -44,6 +44,8 @@ $(document).ready(function() {
     };
 
     login = function(id) {
+        //tentative
+        ws.send('$open$:napthats.com:20017');
         userId = id;
         ws.send('#open ' + id);
         sendInitialMessage();
