@@ -11,7 +11,7 @@ if (!com) com = {};
 if (!com.napthats) com.napthats = {};
 if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
-$(window).load(function() {
+(function() {
     var ns = com.napthats.jsphi;
     var KEYPAD_COMMAND = ['check', 'hit', 'go b', 'cast', 'go l', 'turn b', 'go r', 'turn l', 'go f', 'turn r'];
     var MAP_WIDTH = 7;
@@ -54,8 +54,10 @@ $(window).load(function() {
     ];
     //keypad control (tentative)
     var km = function(){};
-    var tileSheet = document.images[0];
-    var charapng = document.images[1];
+    var tileSheet = new Image();
+    tileSheet.src = 'chips/default.bmp'
+    var charapng = new Image();
+    charapng.src = 'chips/chara.png';
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -69,34 +71,41 @@ $(window).load(function() {
             var mapChipCanvasList = {};
 
             var chipIdList = CHIP_ID_TO_TILE_ORD.keys;
-            for (var chipId in CHIP_ID_TO_TILE_ORD) {
-                var chipCanvas = document.createElement('canvas').getContext('2d');
-                chipCanvas.width = CHIP_SIZE;
-                chipCanvas.height = CHIP_SIZE;
-                var chipOrd = CHIP_ID_TO_TILE_ORD[chipId];
-                chipCanvas.drawImage(tileSheet, chipOrd % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                var chipImageData = chipCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                var maskCanvas = document.createElement('canvas').getContext('2d');
-                maskCanvas.drawImage(tileSheet, (chipOrd + 16) % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                var maskImageData = maskCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                for (var i = 0; i < chipImageData.data.length / 4; i++) {
-                    if (maskImageData.data[i * 4] === 0) {
-                        chipImageData.data[i * 4 + 3] = 0;
+
+            tileSheet.addEventListener('load', function() {
+                for (var chipId in CHIP_ID_TO_TILE_ORD) {
+                    var chipCanvas = document.createElement('canvas').getContext('2d');
+                    chipCanvas.width = CHIP_SIZE;
+                    chipCanvas.height = CHIP_SIZE;
+                    var chipOrd = CHIP_ID_TO_TILE_ORD[chipId];
+                    chipCanvas.drawImage(tileSheet, chipOrd % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
+                    var chipImageData = chipCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
+                    var maskCanvas = document.createElement('canvas').getContext('2d');
+                    maskCanvas.drawImage(tileSheet, (chipOrd + 16) % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
+                    var maskImageData = maskCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
+                    for (var i = 0; i < chipImageData.data.length / 4; i++) {
+                        if (maskImageData.data[i * 4] === 0) {
+                            chipImageData.data[i * 4 + 3] = 0;
+                        }
                     }
+                    chipCanvas.putImageData(chipImageData, 0, 0);
+                    mapChipCanvasList[chipId] = chipCanvas.canvas;
                 }
-                chipCanvas.putImageData(chipImageData, 0, 0);
-                mapChipCanvasList[chipId] = chipCanvas.canvas;
-            }
 
-            //to render grass under tree
-            var treeCtx = mapChipCanvasList['T'].getContext('2d');
-            treeCtx.save();
-            treeCtx.globalCompositeOperation = 'destination-over';
-            treeCtx.drawImage(mapChipCanvasList[':'], 0, 0);
-            treeCtx.restore();
+                //to render grass under tree
+                var treeCtx = mapChipCanvasList['T'].getContext('2d');
+                treeCtx.save();
+                treeCtx.globalCompositeOperation = 'destination-over';
+                treeCtx.drawImage(mapChipCanvasList[':'], 0, 0);
+                treeCtx.restore();
 
-            result.getImage = function(chipId) {
-                return mapChipCanvasList[chipId];
+                result.drawChip = function(chipId, x, y) {
+                    ctx.drawImage(mapChipCanvasList[chipId], x, y);
+                }
+            }, false);
+
+            result.drawChip = function(chipId, x, y) {
+                tileSheet.addEventListener('load', function(){ctx.drawImage(mapChipCanvasList[chipId], x, y)}, false);
             };
 
             return result;
@@ -106,15 +115,21 @@ $(window).load(function() {
             var result = {};
             var charaChipCanvasList = {};
 
-            var chipCanvas = document.createElement('canvas').getContext('2d');
-            chipCanvas.width = CHIP_SIZE;
-            chipCanvas.height = CHIP_SIZE;
-            chipCanvas.drawImage(charapng, 0, 0);
-            charaChipCanvasList['chara'] = chipCanvas.canvas;
+            charapng.addEventListener('load', function() {
+                var chipCanvas = document.createElement('canvas').getContext('2d');
+                chipCanvas.width = CHIP_SIZE;
+                chipCanvas.height = CHIP_SIZE;
+                chipCanvas.drawImage(charapng, 0, 0);
+                charaChipCanvasList['chara'] = chipCanvas.canvas;
 
-            result.getImage = function(phiObjectName) {
+                result.drawChara = function(phiObjectName, x, y) {
+                    ctx.drawImage(charaChipCanvasList['chara'], x, y);
+                };
+            }, false);
+
+            result.drawChara = function(phiObjectName, x, y) {
                 //using default character chip (tentative)
-                return charaChipCanvasList['chara'];
+                charapng.addEventListener('load', function(){ctx.drawImage(charaChipCanvasList['chara'], x, y)}, false);
             };
 
             return result;
@@ -124,7 +139,7 @@ $(window).load(function() {
             ctx.fillRect(0, 0, 224, 240);
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
-                    ctx.drawImage(mapChipList.getImage(mapData.mapChipList[x + y * MAP_WIDTH].chip), x * CHIP_SIZE, y * CHIP_SIZE);
+                    mapChipList.drawChip(mapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
                 }
             }
         };
@@ -133,7 +148,7 @@ $(window).load(function() {
             for (var i = 0; i < objectList.length; i++) {
                 var phiObject = objectList[i];
                 //using default character chip(tentative)
-                ctx.drawImage(charaChipList.getImage('chara'), phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+                charaChipList.drawChara('chara', phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
                 ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
             }
         };
@@ -259,6 +274,6 @@ $(window).load(function() {
 
         return phiUI;
     };
-});
+})();
 
 
