@@ -25,10 +25,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     //using default (tentative)
     var numToGraphicStatus = function(num) {
         return 'command';
-    }
-    var numToGraphicStatus = function(num) {
-        return 'default';
-    }
+    };
 
     //variable;
     var ns = com.napthats.jsphi;
@@ -50,10 +47,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         makeErrorMessage = function(errorData) {
-            var result = DUMMY_MESSAGE_FOR_ERROR;
-            result.data = errorData;
-            return result;
-        }
+            return {data: DUMMY_MESSAGE_FOR_ERROR};
+        };
 
         parseInMultilineMode = function(command, parameters) {
             var result = {type: command, data: ''};
@@ -98,8 +93,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             result.name = parameters.substr(14, 31);
                             result.graphic = {
                                 status: numToGraphicStatus(parseInt(parameters.substr(46, 2))),
-                                name: parameters.substr(49, 15),
-                                gigantFlag: parameters.charAt(65) === '*' ? true : false,
+                                name: parameters.substr(49, 15).replace(/\s+$/, ''),
+                                gigantFlag: parameters.charAt(65) === '*',
                                 type: numToGraphicStatus(parameters.substr(67,2))
                             };
                             if (!(multilineMessageLog.objectList)) multilineMessageLog.objectList = [];

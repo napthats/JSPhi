@@ -17,32 +17,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var MAP_WIDTH = 7;
     var MAP_HEIGHT = 7;
     var CHIP_SIZE = 32;
-    var MPHI_CHIP_WIDTH = 32;
-    var MPHI_CHIP_HEIGHT = 48;
-    var TILE_WIDTH = 32;
-    var CHIP_ID_TO_TILE_ORD = {
-        ' ': 0,
-        'o': 5,
-        ':': 1,
-        '+': 2,
-        '_': 4,
-        'x': 14,
-        '/': 32,
-        '>': 33,
-        'H': 8,
-        '[': 11,
-        '#': 7,
-        'I': 9,
-        '%': 15,
-        '|': 13,
-        'T': 3,
-        '=': 10,
-        '{': 12,
-        '@': 6,
-        '?': 47,
-        //using 'unknown' chip for strage
-        's': 47
-    };
     var INITIAL_MAP_LIST = [
         '?', '?', '?', '?', '?', '?', '?',
         '?', '>', '%', ' ', 'o', '=', '?',
@@ -54,10 +28,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     ];
     //keypad control (tentative)
     var km = function(){};
-    var tileSheet = new Image();
-    tileSheet.src = 'chips/default.bmp'
     var charapng = new Image();
-    charapng.src = 'chips/chara.png';
+    charapng.src = 'chips/chara/PLAYER.bmp';
+    var mapChipType = 'default';
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -65,51 +38,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         ctx.canvas.width = 224;
         ctx.canvas.height = 240;
         $('#map').append(ctx.canvas);
-
-        var mapChipList = (function() {
-            var result = {};
-            var mapChipCanvasList = {};
-
-            var chipIdList = CHIP_ID_TO_TILE_ORD.keys;
-
-            tileSheet.addEventListener('load', function() {
-                for (var chipId in CHIP_ID_TO_TILE_ORD) {
-                    var chipCanvas = document.createElement('canvas').getContext('2d');
-                    chipCanvas.width = CHIP_SIZE;
-                    chipCanvas.height = CHIP_SIZE;
-                    var chipOrd = CHIP_ID_TO_TILE_ORD[chipId];
-                    chipCanvas.drawImage(tileSheet, chipOrd % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                    var chipImageData = chipCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                    var maskCanvas = document.createElement('canvas').getContext('2d');
-                    maskCanvas.drawImage(tileSheet, (chipOrd + 16) % TILE_WIDTH * MPHI_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MPHI_CHIP_HEIGHT, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT, 0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                    var maskImageData = maskCanvas.getImageData(0, 0, MPHI_CHIP_WIDTH, MPHI_CHIP_HEIGHT);
-                    for (var i = 0; i < chipImageData.data.length / 4; i++) {
-                        if (maskImageData.data[i * 4] === 0) {
-                            chipImageData.data[i * 4 + 3] = 0;
-                        }
-                    }
-                    chipCanvas.putImageData(chipImageData, 0, 0);
-                    mapChipCanvasList[chipId] = chipCanvas.canvas;
-                }
-
-                //to render grass under tree
-                var treeCtx = mapChipCanvasList['T'].getContext('2d');
-                treeCtx.save();
-                treeCtx.globalCompositeOperation = 'destination-over';
-                treeCtx.drawImage(mapChipCanvasList[':'], 0, 0);
-                treeCtx.restore();
-
-                result.drawChip = function(chipId, x, y) {
-                    ctx.drawImage(mapChipCanvasList[chipId], x, y);
-                }
-            }, false);
-
-            result.drawChip = function(chipId, x, y) {
-                tileSheet.addEventListener('load', function(){ctx.drawImage(mapChipCanvasList[chipId], x, y)}, false);
-            };
-
-            return result;
-        })();
+        var chipDrawer = ns.makeChipDrawer(ctx);
 
         var charaChipList = (function() {
             var result = {};
@@ -119,17 +48,24 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 var chipCanvas = document.createElement('canvas').getContext('2d');
                 chipCanvas.width = CHIP_SIZE;
                 chipCanvas.height = CHIP_SIZE;
-                chipCanvas.drawImage(charapng, 0, 0);
+                chipCanvas.drawImage(charapng, CHIP_SIZE * 2, 0, CHIP_SIZE, CHIP_SIZE, 0, 0, CHIP_SIZE, CHIP_SIZE);
+                var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
+                for (var i = 0; i < chipImageData.data.length / 4; i++) {
+                    if (chipImageData.data[i*4] === 0 && chipImageData.data[i*4+1] === 128 && chipImageData.data[i*4+2] === 128) {
+                        chipImageData.data[i*4 + 3] = 0;
+                    }
+                }
+                chipCanvas.putImageData(chipImageData, 0, 0);
                 charaChipCanvasList['chara'] = chipCanvas.canvas;
 
                 result.drawChara = function(phiObjectName, x, y) {
-                    ctx.drawImage(charaChipCanvasList['chara'], x, y);
+                    ctx.drawImage(charaChipCanvasList[phiObjectName], x, y);
                 };
             }, false);
 
             result.drawChara = function(phiObjectName, x, y) {
                 //using default character chip (tentative)
-                charapng.addEventListener('load', function(){ctx.drawImage(charaChipCanvasList['chara'], x, y)}, false);
+                charapng.addEventListener('load', function(){ctx.drawImage(charaChipCanvasList[phiObjectName], x, y)}, false);
             };
 
             return result;
@@ -139,7 +75,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             ctx.fillRect(0, 0, 224, 240);
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
-                    mapChipList.drawChip(mapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                    chipDrawer.drawChip('map', mapChipType, mapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
                 }
             }
         };
@@ -148,7 +84,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             for (var i = 0; i < objectList.length; i++) {
                 var phiObject = objectList[i];
                 //using default character chip(tentative)
-                charaChipList.drawChara('chara', phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+                chipDrawer.drawChip('chara', phiObject.graphic.name, 0, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
                 ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
             }
         };
@@ -179,7 +115,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 dir: 'S',
                 name: '',
                 graphic: {
-                    name: '',
+                    name: 'PLAYER',//debug
                     status: 'command',
                     gigantFlag: false,
                     type: 'default'
@@ -234,6 +170,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             msg = msg.split('&').join('&amp;');
             var spanTagNum = 0;
             var commentList = msg.match(/\/\*.*?\*\//g);
+
+            //add html tags for phi style tags
             if (commentList) {
                 commentList.forEach(function(element, index, array) {
                     if (element.match(/^\/\*(?:color=|style=|size=)|^\/\*\.\*\/$/)) {
@@ -251,9 +189,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     }
                 });
             }
+
+            //close all span tags
             for (var i = 0; i < spanTagNum; i++) {
                 msg = msg + '</span>';
             }
+
             $('#log').append('<div class="message">'+msg+'</div>');
             $('#log').scrollTop(1000000);
         };
