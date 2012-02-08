@@ -26,22 +26,26 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
+    var ANIMATION_FRAME_RATE = 500;
     //keypad control (tentative)
     var km = function(){};
-    var charapng = new Image();
-    charapng.src = 'chips/chara/PLAYER.bmp';
-    var mapChipType = 'default';
 
     ns.makePhiUI = function() {
         var phiUI = {};
+        var mapChipType = 'default';
         var ctx = document.createElement('canvas').getContext('2d');
         ctx.canvas.width = 224;
         ctx.canvas.height = 240;
         $('#map').append(ctx.canvas);
         var chipDrawer = ns.makeChipDrawer(ctx);
+        var objectAnimationIntervalIdList = [];
+        var prevMapData = {};
+        var prevObjectList = [];
+        var animationFrame = 0;
 
 
         phiUI.showMap = function(mapData) {
+            prevMapData = mapData;
             ctx.fillRect(0, 0, 224, 240);
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
@@ -49,13 +53,33 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 }
             }
         };
-        
+
         phiUI.showObjects = function(objectList) {
-            for (var i = 0; i < objectList.length; i++) {
-                var phiObject = objectList[i];
-                //using default character chip(tentative)
-                chipDrawer.drawChip('chara', phiObject.graphic.name, 0, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
+            prevObjectList = objectList;
+            for (var i = 0; i < objectAnimationIntervalIdList.length; i++) {
+                clearInterval(objectAnimationIntervalIdList[i]);
+            }
+            objectAnimationIntervalIdList = [];
+
+            var drawObjectAnimation = function(phiObject) {
+                chipDrawer.drawChip(
+                    'chara', phiObject.graphic.name, phiObject.dir + (phiObject.graphic.gigantFlag ? '*' : '') + animationFrame,
+                    phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE
+                );
                 ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
+                objectAnimationIntervalIdList.push(
+                    setInterval(function() {
+                        chipDrawer.drawChip(
+                            'chara', phiObject.graphic.name, phiObject.dir + (phiObject.graphic.gigantFlag ? '*' : '') + animationFrame,
+                            phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE
+                        );
+                        ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
+                    }, ANIMATION_FRAME_RATE)
+                );
+            };
+
+            for (var i = 0; i < objectList.length; i++) {
+                drawObjectAnimation(objectList[i]);
             }
         };
 
@@ -138,11 +162,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
 
-        //set initial map
-        var initialMapData = {};
-        initialMapData.mapChipList = [];
+        //set initial map and object
+        prevMapData.mapChipList = [];
         for (var i = 0; i < INITIAL_MAP_LIST.length; i++) {
-            initialMapData.mapChipList.push({
+            prevMapData.mapChipList.push({
                 chip: INITIAL_MAP_LIST[i],
                 status: {
                     itemType: 0,
@@ -152,23 +175,29 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 }
             });
         }
-
+        prevObjectList = [{
+            type: 'character',
+            id: '0',
+            x: 3,
+            y: 4,
+            dir: 'B',
+            name: '',
+            graphic: {
+                name: 'PLAYER',//debug
+                status: 'command',
+                gigantFlag: true,
+                type: 'default'
+            }
+        }];
         chipDrawer.onload(function() {
-            //set initial chara graphic
-            phiUI.showObjects([{
-                type: 'character',
-                id: '0',
-                x: 3,
-                y: 4,
-                dir: 'S',
-                name: '',
-                graphic: {
-                    name: 'PLAYER',//debug
-                    status: 'command',
-                    gigantFlag: false,
-                    type: 'default'
-                }
-            }]);
+            phiUI.showMap(prevMapData);
+            phiUI.showObjects(prevObjectList);
+            //Animation
+            setInterval(function() {
+                animationFrame = animationFrame ? 0 : 1;
+                phiUI.showMap(prevMapData);
+                phiUI.showObjects(prevObjectList);
+            }, ANIMATION_FRAME_RATE);
         });
 
         //keypad control (tentative)

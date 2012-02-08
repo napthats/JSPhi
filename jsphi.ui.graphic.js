@@ -15,8 +15,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var MAP_CHIP_WIDTH = 32;
     var MAP_CHIP_HEIGHT = 48;
     var CHIP_SIZE = 32;
-    var TILE_WIDTH = 32;
-    var CHIP_ID_TO_TILE_ORD = {
+    var MAP_TILE_WIDTH = 32;
+    var CHARA_TILE_HEIGHT = 4;
+    var MAP_CHIP_ID_TO_TILE_ORD = {
         ' ': 0,
         'o': 5,
         ':': 1,
@@ -39,6 +40,17 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         //using 'unknown' chip for strage
         's': 47
     };
+    var CHARA_CHIP_ID_TO_TILE_ORD = {
+        'B': 0,
+        'R': 1,
+        'F': 2,
+        'L': 3,
+        'B*': 4,
+        'R*': 5,
+        'F*': 6,
+        'L*': 7
+    };
+    var CHARA_CHIP_THIN_NUM = 4;
     var CHIP_FILE_PREFIX = {
         'chara': 'chips/chara/',
         'map': 'chips/map/'
@@ -68,14 +80,14 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             //make canvas after loading image
             if (tileType === 'map') {
                 tileSheet.addEventListener('load', function() {
-                    for (var _chipId in CHIP_ID_TO_TILE_ORD) {
+                    for (var chipId in MAP_CHIP_ID_TO_TILE_ORD) {
                         var chipCanvas = document.createElement('canvas').getContext('2d');
                         chipCanvas.width = CHIP_SIZE;
                         chipCanvas.height = CHIP_SIZE;
-                        var chipOrd = CHIP_ID_TO_TILE_ORD[_chipId];
+                        var chipOrd = MAP_CHIP_ID_TO_TILE_ORD[chipId];
                         chipCanvas.drawImage(
                             tileSheet,
-                            chipOrd % TILE_WIDTH * MAP_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MAP_CHIP_HEIGHT,
+                            chipOrd % MAP_TILE_WIDTH * MAP_CHIP_WIDTH, Math.floor(chipOrd / MAP_TILE_WIDTH) * MAP_CHIP_HEIGHT,
                             MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT,
                             0, 0,
                             MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT
@@ -84,7 +96,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
                         var maskCanvas = document.createElement('canvas').getContext('2d');
                         maskCanvas.drawImage(tileSheet,
-                            (chipOrd + 16) % TILE_WIDTH * MAP_CHIP_WIDTH, Math.floor(chipOrd / TILE_WIDTH) * MAP_CHIP_HEIGHT,
+                            (chipOrd + 16) % MAP_TILE_WIDTH * MAP_CHIP_WIDTH, Math.floor(chipOrd / MAP_TILE_WIDTH) * MAP_CHIP_HEIGHT,
                             MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT,
                             0, 0,
                             MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT
@@ -99,7 +111,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         }
 
                         chipCanvas.putImageData(chipImageData, 0, 0);
-                        chipCanvasList[tileType][tileName][_chipId] = chipCanvas.canvas;
+                        chipCanvasList[tileType][tileName][chipId] = chipCanvas.canvas;
                     }
 
                     //to render grass under tree
@@ -112,18 +124,35 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             }
             else if (tileType === 'chara') {
                 tileSheet.addEventListener('load', function() {
-                    var chipCanvas = document.createElement('canvas').getContext('2d');
-                    chipCanvas.width = CHIP_SIZE;
-                    chipCanvas.height = CHIP_SIZE;
-                    chipCanvas.drawImage(tileSheet, CHIP_SIZE * 2, 0, CHIP_SIZE, CHIP_SIZE, 0, 0, CHIP_SIZE, CHIP_SIZE);
-                    var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
-                    for (var i = 0; i < chipImageData.data.length / 4; i++) {
-                        if (chipImageData.data[i*4] === 0 && chipImageData.data[i*4+1] === 128 && chipImageData.data[i*4+2] === 128) {
-                            chipImageData.data[i*4 + 3] = 0;
+                    for (var chipId in CHARA_CHIP_ID_TO_TILE_ORD) {
+                        for (var frame = 0; frame < 2; frame++) {
+                            var chipCanvas = document.createElement('canvas').getContext('2d');
+                            chipCanvas.width = CHIP_SIZE;
+                            chipCanvas.height = CHIP_SIZE;
+                            //fill transparent color for thin chip
+                            chipCanvas.fillStyle = '#008080';
+                            chipCanvas.fillRect(0, 0, CHIP_SIZE, CHIP_SIZE);
+
+                            var chipOrd = CHARA_CHIP_ID_TO_TILE_ORD[chipId];
+                            chipCanvas.drawImage(
+                                tileSheet,
+                                (Math.floor(chipOrd / CHARA_TILE_HEIGHT) + (frame === 1 ? 1 : 0)) * (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), chipOrd % CHARA_TILE_HEIGHT * CHIP_SIZE,
+                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE,
+                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 4 : 0), 0,
+                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE
+                            );
+
+                            var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
+                            for (var i = 0; i < chipImageData.data.length / 4; i++) {
+                                if (chipImageData.data[i*4] === 0 && chipImageData.data[i*4+1] === 128 && chipImageData.data[i*4+2] === 128) {
+                                    chipImageData.data[i*4 + 3] = 0;
+                                }
+                            }
+
+                            chipCanvas.putImageData(chipImageData, 0, 0);
+                            chipCanvasList[tileType][tileName][chipId + frame] = chipCanvas.canvas;
                         }
                     }
-                    chipCanvas.putImageData(chipImageData, 0, 0);
-                    chipCanvasList[tileType][tileName][0] = chipCanvas.canvas;
                 }, false);
             }
 
