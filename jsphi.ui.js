@@ -40,36 +40,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         $('#map').append(ctx.canvas);
         var chipDrawer = ns.makeChipDrawer(ctx);
 
-        var charaChipList = (function() {
-            var result = {};
-            var charaChipCanvasList = {};
-
-            charapng.addEventListener('load', function() {
-                var chipCanvas = document.createElement('canvas').getContext('2d');
-                chipCanvas.width = CHIP_SIZE;
-                chipCanvas.height = CHIP_SIZE;
-                chipCanvas.drawImage(charapng, CHIP_SIZE * 2, 0, CHIP_SIZE, CHIP_SIZE, 0, 0, CHIP_SIZE, CHIP_SIZE);
-                var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
-                for (var i = 0; i < chipImageData.data.length / 4; i++) {
-                    if (chipImageData.data[i*4] === 0 && chipImageData.data[i*4+1] === 128 && chipImageData.data[i*4+2] === 128) {
-                        chipImageData.data[i*4 + 3] = 0;
-                    }
-                }
-                chipCanvas.putImageData(chipImageData, 0, 0);
-                charaChipCanvasList['chara'] = chipCanvas.canvas;
-
-                result.drawChara = function(phiObjectName, x, y) {
-                    ctx.drawImage(charaChipCanvasList[phiObjectName], x, y);
-                };
-            }, false);
-
-            result.drawChara = function(phiObjectName, x, y) {
-                //using default character chip (tentative)
-                charapng.addEventListener('load', function(){ctx.drawImage(charaChipCanvasList[phiObjectName], x, y)}, false);
-            };
-
-            return result;
-        })();
 
         phiUI.showMap = function(mapData) {
             ctx.fillRect(0, 0, 224, 240);
@@ -87,56 +57,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 chipDrawer.drawChip('chara', phiObject.graphic.name, 0, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE);
                 ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
             }
-        };
-
-        phiUI.initialize = function() {
-            //set initial map
-            var initialMapData = {};
-            initialMapData.mapChipList = [];
-            for (var i = 0; i < INITIAL_MAP_LIST.length; i++) {
-                initialMapData.mapChipList.push({
-                    chip: INITIAL_MAP_LIST[i],
-                    status: {
-                        itemType: 0,
-                        messageFlag: false,
-                        roofFlag: false,
-                        areaID: 0
-                    }
-                });
-            }
-            phiUI.showMap(initialMapData);
-
-            //set initial chara graphic
-            phiUI.showObjects([{
-                type: 'character',
-                id: '0',
-                x: 3,
-                y: 4,
-                dir: 'S',
-                name: '',
-                graphic: {
-                    name: 'PLAYER',//debug
-                    status: 'command',
-                    gigantFlag: false,
-                    type: 'default'
-                }
-            }]);
-
-            //keypad control (tentative)
-            $('#text').keydown(function(e){
-                var keycode = e.keyCode;
-                if(keycode === 13){
-                    $('#send').click();
-                }
-                else if(keycode >= 96 && keycode <= 105) {
-                    //TODO: move to jsphi.js
-                    //send_message(KEYPAD_COMMAND[keycode - 96]);
-                    km(KEYPAD_COMMAND[keycode - 96]);
-                    //end TODO
-                    $('#text').val('');
-                    e.preventDefault();
-                }
-            });
         };
 
         //bind callback for UI event
@@ -212,6 +132,60 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             $('#log').append('<div class="error_message">'+msg+'</div>');
             $('#log').scrollTop(1000000);
         };
+
+        phiUI.setMapChipType = function(_mapChipType) {
+            mapChipType = _mapChipType;
+        };
+
+
+        //set initial map
+        var initialMapData = {};
+        initialMapData.mapChipList = [];
+        for (var i = 0; i < INITIAL_MAP_LIST.length; i++) {
+            initialMapData.mapChipList.push({
+                chip: INITIAL_MAP_LIST[i],
+                status: {
+                    itemType: 0,
+                    messageFlag: false,
+                    roofFlag: false,
+                    areaID: 0
+                }
+            });
+        }
+
+        chipDrawer.onload(function() {
+            //set initial chara graphic
+            phiUI.showObjects([{
+                type: 'character',
+                id: '0',
+                x: 3,
+                y: 4,
+                dir: 'S',
+                name: '',
+                graphic: {
+                    name: 'PLAYER',//debug
+                    status: 'command',
+                    gigantFlag: false,
+                    type: 'default'
+                }
+            }]);
+        });
+
+        //keypad control (tentative)
+        $('#text').keydown(function(e){
+            var keycode = e.keyCode;
+            if(keycode === 13){
+                $('#send').click();
+            }
+            else if(keycode >= 96 && keycode <= 105) {
+                //TODO: move to jsphi.js
+                //send_message(KEYPAD_COMMAND[keycode - 96]);
+                km(KEYPAD_COMMAND[keycode - 96]);
+                //end TODO
+                $('#text').val('');
+                e.preventDefault();
+            }
+        });
 
         return phiUI;
     };

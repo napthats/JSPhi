@@ -23,7 +23,6 @@ $(document).ready(function() {
 
     //function
     var recvMessage;
-    var initialize;
     var execRecvCommand;
     var login;
     var logout;
@@ -31,17 +30,6 @@ $(document).ready(function() {
     var sendInitialMessage;
     var spExecRecvCommand;
 
-
-    initialize = function() {
-        ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
-        phiUI = NS_JSPHI.makePhiUI();
-        phiUI.initialize();
-        phiUI.bind('send', function(msg){ws.send(msg)});
-        phiUI.bind('login', function(id){login(id)});
-        phiUI.bind('logout', function(){logout()});
-        //tentative support
-        phiUI.bind('keypad', function(kc){ws.send(kc)});
-    };
 
     login = function(id) {
         //tentative
@@ -266,7 +254,14 @@ $(document).ready(function() {
 
     };
 
-    initialize();
+
+    ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
+    phiUI = NS_JSPHI.makePhiUI();
+    phiUI.bind('send', function(msg){ws.send(msg)});
+    phiUI.bind('login', function(id){login(id)});
+    phiUI.bind('logout', function(){logout()});
+    //tentative support
+    phiUI.bind('keypad', function(kc){ws.send(kc)});
 });
 
 
