@@ -20,6 +20,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var phiUI = _phiUI;
         var ws = _ws;
         var userId;
+        var sendMessageEnterWorld = function(){};
 
         var makeTransferExec = function() {
             var state = 'ch-srv';
@@ -64,7 +65,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             phiUI.showClientMessage('Transfer completed.');
                             ws.send('$flip$');
                             ws.send('#ch-srv-ok');
-                            sendInitialMessage();
+                            sendMessageEnterWorld();
                             commandExecutor.exec = normalExec;
                             ws.send('$closesub$');
                             return;
@@ -164,11 +165,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'trs_ok':
                     phiUI.showErrorMessage('Unexpected transfer command.');
                     break;
-                case 'map':
-                    phiUI.showErrorMessage('Not support old map protocol.');
-                    break;
 
                 //just ignore
+                case 'map':
                 case 'attack':
                 case 'end-at':
                 case 'magic':
@@ -212,6 +211,17 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         commandExecutor.resetExecutor = function() {
             commandExecutor.exec = normalExec;
+        };
+
+        commandExecutor.bind = function(type, func) {
+            switch (type) {
+                case 'enter_world':
+                    sendMessageEnterWorld = func;
+                    break;
+                default:
+                    phiUI.showError('assertion error.');
+                    break;
+            }
         };
 
         commandExecutor.exec = normalExec;

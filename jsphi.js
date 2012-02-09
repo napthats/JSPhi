@@ -8,13 +8,10 @@
 
 
 $(document).ready(function() {
-    //const
     var NS_JSPHI = com.napthats.jsphi;
     var NS_WEBSOCKET = com.napthats.websocket;
-    var CLIENT_VERSION = '05103010';
     var URL_WEBSOCKT = 'ws://localhost:8080/ws/';
-
-    //variable
+    var CLIENT_VERSION = '05103010';
     var phiUI;
     var commandExecutor;
     var ws;
@@ -26,7 +23,7 @@ $(document).ready(function() {
         userId = id;
         commandExecutor.setUserId(userId);
         ws.send('#open ' + id);
-        sendInitialMessage();
+        sendMessageEnterWorld();
     };
 
     var logout = function() {
@@ -34,7 +31,17 @@ $(document).ready(function() {
         ws.send('exit');
     };
 
-    var sendInitialMessage = function() {
+    var recvMessage = function(msg){
+        var phidmMessage = NS_JSPHI.phidmMessageParse(msg.data);
+        if (!phidmMessage) return; //message does not exist or not end
+        commandExecutor.exec(phidmMessage);
+    };
+
+    var sendMessage = function(msg) {
+        ws.send(msg);
+    };
+
+    var sendMessageEnterWorld = function() {
         //test default setting
         ws.send('#map-iv 1');
         ws.send('#status-iv 1');
@@ -48,21 +55,15 @@ $(document).ready(function() {
         //end test
     };
 
-    var recvMessage = function(msg){
-        var phidmMessage = NS_JSPHI.phidmMessageParse(msg.data);
-        if (!phidmMessage) return; //message does not exist or not end
-        commandExecutor.exec(phidmMessage);
-    };
-
-
     ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
     phiUI = NS_JSPHI.makePhiUI();
-    phiUI.bind('send', function(msg){ws.send(msg)});
+    phiUI.bind('send', function(msg){sendMessage(msg)});
     phiUI.bind('login', function(id){login(id)});
-    phiUI.bind('logout', function(){logout()});
+    phiUI.bind('logout', logout);
     //tentative support
     phiUI.bind('keypad', function(kc){ws.send(kc)});
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
+    commandExecutor.bind('enter_world', sendMessageEnterWorld);
 });
 
 

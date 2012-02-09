@@ -17,6 +17,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var MAP_WIDTH = 7;
     var MAP_HEIGHT = 7;
     var CHIP_SIZE = 32;
+    var CANVAS_WIDTH_DEFAULT = 224;
+    var CANVAS_HEIGHT_DEFAULT = 240;
     var INITIAL_MAP_LIST = [
         '?', '?', '?', '?', '?', '?', '?',
         '?', '>', '%', ' ', 'o', '=', '?',
@@ -34,52 +36,33 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var phiUI = {};
         var mapChipType = 'default';
         var ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = 224;
-        ctx.canvas.height = 240;
+        ctx.canvas.width = CANVAS_WIDTH_DEFAULT;
+        ctx.canvas.height = CANVAS_HEIGHT_DEFAULT;
         $('#map').append(ctx.canvas);
         var chipDrawer = ns.makeChipDrawer(ctx);
-        var objectAnimationIntervalIdList = [];
         var prevMapData = {};
         var prevObjectList = [];
         var animationFrame = 0;
 
 
         phiUI.showMap = function(mapData) {
-            prevMapData = mapData;
-            ctx.fillRect(0, 0, 224, 240);
+            if (mapData) prevMapData = mapData;
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
-                    chipDrawer.drawChip('map', mapChipType, mapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                    chipDrawer.drawChip('map', mapChipType, prevMapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
                 }
             }
         };
 
         phiUI.showObjects = function(objectList) {
-            prevObjectList = objectList;
-            for (var i = 0; i < objectAnimationIntervalIdList.length; i++) {
-                clearInterval(objectAnimationIntervalIdList[i]);
-            }
-            objectAnimationIntervalIdList = [];
-
-            var drawObjectAnimation = function(phiObject) {
+            if (objectList) prevObjectList = objectList;
+            for (var i = 0; i < prevObjectList.length; i++) {
                 chipDrawer.drawChip(
-                    'chara', phiObject.graphic.name, phiObject.dir + (phiObject.graphic.gigantFlag ? '*' : '') + animationFrame,
-                    phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE
+                    'chara', prevObjectList[i].graphic.name, prevObjectList[i].dir + (prevObjectList[i].graphic.gigantFlag ? '*' : '') + animationFrame,
+                    prevObjectList[i].x * CHIP_SIZE, prevObjectList[i].y * CHIP_SIZE
                 );
-                ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
-                objectAnimationIntervalIdList.push(
-                    setInterval(function() {
-                        chipDrawer.drawChip(
-                            'chara', phiObject.graphic.name, phiObject.dir + (phiObject.graphic.gigantFlag ? '*' : '') + animationFrame,
-                            phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE
-                        );
-                        ctx.fillText(phiObject.name, phiObject.x * CHIP_SIZE, phiObject.y * CHIP_SIZE + CHIP_SIZE / 4);
-                    }, ANIMATION_FRAME_RATE)
-                );
-            };
-
-            for (var i = 0; i < objectList.length; i++) {
-                drawObjectAnimation(objectList[i]);
+                ctx.fillText(prevObjectList[i].name, prevObjectList[i].x * CHIP_SIZE, prevObjectList[i].y * CHIP_SIZE + CHIP_SIZE / 4);
             }
         };
 
@@ -103,9 +86,16 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     km = function(kc){func(kc)};
                     break;
                 default:
-                    phiUI.showError('assertion error.');
+                    phiUI.showErrorMessage('assertion error.');
                     break;
             }
+        };
+
+        phiUI.changeMapScale = function(scale) {
+            $('#map').css('width', scale * CANVAS_WIDTH_DEFAULT + 'px').css('height', scale * CANVAS_HEIGHT_DEFAULT + 'px');
+            ctx.canvas.width = CANVAS_WIDTH_DEFAULT * scale;
+            ctx.canvas.height = CANVAS_HEIGHT_DEFAULT * scale;
+            ctx.scale(scale, scale);
         };
 
         //show normal message with phi style tags
@@ -175,6 +165,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 }
             });
         }
+
         prevObjectList = [{
             type: 'character',
             id: '0',
@@ -189,14 +180,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 type: 'default'
             }
         }];
+        
         chipDrawer.onload(function() {
-            phiUI.showMap(prevMapData);
-            phiUI.showObjects(prevObjectList);
+            phiUI.showMap();
+            phiUI.showObjects();
             //Animation
             setInterval(function() {
                 animationFrame = animationFrame ? 0 : 1;
-                phiUI.showMap(prevMapData);
-                phiUI.showObjects(prevObjectList);
+                phiUI.showMap();
+                phiUI.showObjects();
             }, ANIMATION_FRAME_RATE);
         });
 
@@ -213,6 +205,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 //end TODO
                 $('#text').val('');
                 e.preventDefault();
+            }
+        });
+
+        $('#map_size').keydown(function(e){
+            if(e.keyCode === 13) {
+                phiUI.changeMapScale($('#map_size').val());
+                $('#map_size').val('');
             }
         });
 

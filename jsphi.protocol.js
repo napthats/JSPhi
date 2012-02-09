@@ -23,34 +23,25 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         F: 'effect_object'
     };
     //using default (tentative)
-    var numToGraphicStatus = function(num) {
+    var NUM_TO_GRAPHIC_STATUS = function(num) {
         return 'command';
     };
-
-    //variable;
     var ns = com.napthats.jsphi;
     var currentMultilineMessageCommand = null; //multiline mode if it isn't null
     var multilineMessageLog = [];
 
-    //function
-    var endMultilineMode;
-    var parseInMultilineMode;
-    var parseInNormalMode;
-    var makeErrorMessage;
-    var parseWebsocketProxyMessage;
-
 
     ns.phidmMessageParse = function(msg) {
-        endMultilineMode = function() {
+        var endMultilineMode = function() {
             currentMultilineMessageCommand = null;
             multilineMessageLog = [];
         };
 
-        makeErrorMessage = function(errorData) {
+        var makeErrorMessage = function(errorData) {
             return {data: DUMMY_MESSAGE_FOR_ERROR};
         };
 
-        parseInMultilineMode = function(command, parameters) {
+        var parseInMultilineMode = function(command, parameters) {
             var result = {type: command, data: ''};
             switch (command) {
                 case 'm57':
@@ -92,10 +83,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             result.dir = parameters.charAt(12);
                             result.name = parameters.substr(14, 31);
                             result.graphic = {
-                                status: numToGraphicStatus(parseInt(parameters.substr(46, 2))),
+                                status: NUM_TO_GRAPHIC_STATUS(parseInt(parameters.substr(46, 2))),
                                 name: parameters.substr(49, 15).replace(/\s+$/, ''),
                                 gigantFlag: parameters.charAt(65) === '*',
-                                type: numToGraphicStatus(parameters.substr(67,2))
+                                type: NUM_TO_GRAPHIC_STATUS(parameters.substr(67,2))
                             };
                             if (!(multilineMessageLog.objectList)) multilineMessageLog.objectList = [];
                             multilineMessageLog.objectList.push(result);
@@ -141,7 +132,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         //note: ignore too much parameters
-        parseInNormalMode = function(command, parameters) {
+        var parseInNormalMode = function(command, parameters) {
             var result = {type: command, data: ''};
             switch (command) {
                 //general multiline style
@@ -218,7 +209,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             }
         };
 
-        parseWebsocketProxyMessage = function(command) {
+        var parseWebsocketProxyMessage = function(command) {
             var result = {type: '$' + command, data: ''};
             switch (command) {
                 case 'cnt-no':
@@ -258,4 +249,3 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         }
     };
 })();
-

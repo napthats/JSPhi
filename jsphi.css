@@ -6,6 +6,16 @@
 #map {
 	width: 224px;
     height: 240px;
+    float: left;
+}
+
+#options {
+    float: left;
+    padding: 0 50px;
+}
+
+#map_size {
+    width: 40px;
 }
 
 #pcgl {
@@ -37,6 +47,7 @@
   overflow: scroll;
   width: 800px;
   height: 400px;
+  clear: left;
 }
 
 #text {
