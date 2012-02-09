@@ -56,11 +56,11 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     //ground and item
                     if (chipData.status && chipData.status.itemType) {
                         if (chipId === '%' || chipId === 'x') {
-                            chipDrawer.drawChip('map', mapChipType, chipData.chip + 'i', x * CHIP_SIZE, y * CHIP_SIZE);
+                            chipDrawer.drawChip('map', mapChipType, chipData.chip + 'i' + chipData.status.itemType, x * CHIP_SIZE, y * CHIP_SIZE);
                         }
                         else {
                             chipDrawer.drawChip('map', mapChipType, chipData.chip, x * CHIP_SIZE, y * CHIP_SIZE);
-                            chipDrawer.drawChip('map', mapChipType, 'i', x * CHIP_SIZE, y * CHIP_SIZE);
+                            chipDrawer.drawChip('map', mapChipType, 'i' + chipData.status.itemType, x * CHIP_SIZE, y * CHIP_SIZE);
                         }
                     }
                     else {
@@ -205,6 +205,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 type: 'default'
             }
         }];
+
+        //debug
+        mapChipType = 'ship';
         
         chipDrawer.onload(function() {
             phiUI.showMap();
