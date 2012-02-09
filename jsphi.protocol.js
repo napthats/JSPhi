@@ -64,10 +64,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                                 result.mapChipList.push({
                                     chip: chip,
                                     status: {
-                                        itemType: status & 0x70,
-                                        messageFlag: status & 0xf === 0xf ? true : false,
-                                        roofFlag: status & 0x8 === 0x8 ? true : false,
-                                        areaID: status & 0x6
+                                        itemType: (status.charCodeAt(0) & 0x70) >>> 4,
+                                        boardFlag: status.charCodeAt(0) & 0x8 ? true : false,
+                                        roofFlag: status.charCodeAt(0) & 0x4 ? true : false,
+                                        areaID: status.charCodeAt(0) & 0x3
                                     }
                                 });
                             }

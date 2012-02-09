@@ -38,7 +38,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '@': 6,
         '?': 47,
         //using 'unknown' chip for strage
-        's': 47
+        's': 47,
+        //item and board
+        'xi': 37,
+        '%i': 38,
+        'i': 35,
+        'b': 36,
+        'B': 34
     };
     var CHARA_CHIP_ID_TO_TILE_ORD = {
         'B': 0,
@@ -84,6 +90,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         var chipCanvas = document.createElement('canvas').getContext('2d');
                         chipCanvas.width = CHIP_SIZE;
                         chipCanvas.height = CHIP_SIZE;
+
+                        //load image
                         var chipOrd = MAP_CHIP_ID_TO_TILE_ORD[chipId];
                         chipCanvas.drawImage(
                             tileSheet,
@@ -94,6 +102,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         );
                         var chipImageData = chipCanvas.getImageData(0, 0, MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT);
 
+                        //load mask image
                         var maskCanvas = document.createElement('canvas').getContext('2d');
                         maskCanvas.drawImage(tileSheet,
                             (chipOrd + 16) % MAP_TILE_WIDTH * MAP_CHIP_WIDTH, Math.floor(chipOrd / MAP_TILE_WIDTH) * MAP_CHIP_HEIGHT,
@@ -103,8 +112,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         );
                         var maskImageData = maskCanvas.getImageData(0, 0, MAP_CHIP_WIDTH, MAP_CHIP_HEIGHT);
 
-                        //mask image with MPHI map chip masking rule
+                        //mask with phi2 map chip masking rule
                         for (var j = 0; j < chipImageData.data.length / 4; j++) {
+                            //debug
+                            if (chipId === 'i' && chipImageData.data[j * 4+1] !== 255) {
+                                console.log(chipImageData.data[j*4] + ':' + chipImageData.data[j*4+1]+':'+chipImageData.data[j*4+2]);
+                            }
+                            //end debug
                             if (maskImageData.data[j * 4] === 0) {
                                 chipImageData.data[j * 4 + 3] = 0;
                             }
@@ -129,10 +143,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             var chipCanvas = document.createElement('canvas').getContext('2d');
                             chipCanvas.width = CHIP_SIZE;
                             chipCanvas.height = CHIP_SIZE;
+
                             //fill transparent color for thin chip
                             chipCanvas.fillStyle = '#008080';
                             chipCanvas.fillRect(0, 0, CHIP_SIZE, CHIP_SIZE);
 
+                            //load image
                             var chipOrd = CHARA_CHIP_ID_TO_TILE_ORD[chipId];
                             chipCanvas.drawImage(
                                 tileSheet,
@@ -143,6 +159,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             );
 
                             var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
+                            //mask with phi character graphic masking rule
                             for (var i = 0; i < chipImageData.data.length / 4; i++) {
                                 if (chipImageData.data[i*4] === 0 && chipImageData.data[i*4+1] === 128 && chipImageData.data[i*4+2] === 128) {
                                     chipImageData.data[i*4 + 3] = 0;
@@ -160,19 +177,21 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         chipDrawer.drawChip = function(tileType, tileName, chipId, x, y) {
+            var drawTileName;
             //loading image completed
             if (chipCanvasList[tileType][tileName] && chipCanvasList[tileType][tileName][chipId]) {
-                ctx.drawImage(chipCanvasList[tileType][tileName][chipId], x, y);
+                drawTileName = tileName;
             }
             //now loading or loading failed
             else if (chipCanvasList[tileType][tileName]) {
-                ctx.drawImage(chipCanvasList[tileType][DEFAULT_TILE_NAME[tileType]][chipId], x, y);
+                drawTileName = DEFAULT_TILE_NAME[tileType];
             }
             //not yet
             else {
+                drawTileName = DEFAULT_TILE_NAME[tileType];
                 chipDrawer.loadTileSheet(tileType, tileName);
-                ctx.drawImage(chipCanvasList[tileType][DEFAULT_TILE_NAME[tileType]][chipId], x, y);
             }
+            ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], x, y);
         };
 
         chipDrawer.onload = function(func) {onloadFunc = func};

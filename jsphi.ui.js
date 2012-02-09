@@ -50,7 +50,32 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
-                    chipDrawer.drawChip('map', mapChipType, prevMapData.mapChipList[x + y * MAP_WIDTH].chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                    var chipData = prevMapData.mapChipList[x + y * MAP_WIDTH];
+                    var chipId = chipData.chip;
+
+                    //ground and item
+                    if (chipData.status && chipData.status.itemType) {
+                        if (chipId === '%' || chipId === 'x') {
+                            chipDrawer.drawChip('map', mapChipType, chipData.chip + 'i', x * CHIP_SIZE, y * CHIP_SIZE);
+                        }
+                        else {
+                            chipDrawer.drawChip('map', mapChipType, chipData.chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                            chipDrawer.drawChip('map', mapChipType, 'i', x * CHIP_SIZE, y * CHIP_SIZE);
+                        }
+                    }
+                    else {
+                        chipDrawer.drawChip('map', mapChipType, chipData.chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                    }
+
+                    //board
+                    if (chipData.status && chipData.status.boardFlag) {
+                        if  (chipId === '[' || chipId === '{' || chipId === '%') {
+                            chipDrawer.drawChip('map', mapChipType, 'b', x * CHIP_SIZE, y * CHIP_SIZE);
+                        }
+                        else {
+                            chipDrawer.drawChip('map', mapChipType, 'B', x * CHIP_SIZE, y * CHIP_SIZE);
+                        }
+                    }
                 }
             }
         };
@@ -159,7 +184,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 chip: INITIAL_MAP_LIST[i],
                 status: {
                     itemType: 0,
-                    messageFlag: false,
+                    boardFlag: false,
                     roofFlag: false,
                     areaID: 0
                 }
@@ -174,7 +199,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             dir: 'B',
             name: '',
             graphic: {
-                name: 'PLAYER',//debug
+                name: 'PLAYER',
                 status: 'command',
                 gigantFlag: true,
                 type: 'default'
