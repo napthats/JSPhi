@@ -118,12 +118,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     result.data = multilineMessageLog;
                     endMultilineMode();
                     return result;
-                case '.':
-                    if (currentMultilineMessageCommand !== 's-edit' && currentMultilineMessageCommand !== 'm-edit') return makeErrorMessage([command, parameters]);
-                    result.type = currentMultilineMessageCommand;
-                    result.data = multilineMessageLog;
-                    endMultilineMode();
-                    return result;
 
                 case TYPE_OF_NORMAL_MESSAGE:
                     multilineMessageLog.push(parameters);
@@ -145,12 +139,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     return;
 
                 //start-end multiline style
-                case 's-edit':
-                    currentMultilineMessageCommand = 's-edit';
-                    return;
-                case 'm-edit':
-                    currentMultilineMessageCommand = 'm-edit';
-                    return;
                 case 'more':
                     currentMultilineMessageCommand = 'more';
                     return;
@@ -164,8 +152,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'end-more':
                     return makeErrorMessage([command, parameters]);
                 case 'end-list':
-                    return makeErrorMessage([command, parameters]);
-                case '.':
                     return makeErrorMessage([command, parameters]);
 
                 //key=value style

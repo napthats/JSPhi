@@ -155,11 +155,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'set-user-id':
                     phiUI.showClientMessage('Not support registration.');
                     break;
-                case 's-edit':
-                case 'm-edit':
-                case '.':
-                    phiUI.showErrorMessage('Not support edit.');
-                    break;
                 case 'rsv-ok':
                 case 'trs_no':
                 case 'trs_ok':
@@ -167,6 +162,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     break;
 
                 //just ignore
+                case 's-edit':
+                case 'm-edit':
+                case '.':
                 case 'map':
                 case 'attack':
                 case 'end-at':

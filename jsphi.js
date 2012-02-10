@@ -52,6 +52,7 @@ $(document).ready(function() {
         ws.send('#ex-switch ex-move-recv=true');
         ws.send('#ex-switch ex-list-mode-end=true');
         ws.send('#ex-switch ex-disp-magic=false');
+        ws.send('floor item');
         //end test
     };
 

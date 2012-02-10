@@ -206,9 +206,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             }
         }];
 
-        //debug
-        mapChipType = 'ship';
-        
+        //test
+        mapChipType = 'default2';
+        //end test
+
         chipDrawer.onload(function() {
             phiUI.showMap();
             phiUI.showObjects();
@@ -226,18 +227,29 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             if(keycode === 13){
                 $('#send').click();
             }
-            else if(keycode >= 96 && keycode <= 105) {
+            else if (keycode === 9) {
+                $('#control').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#control').keydown(function(e){
+            var keycode = e.keyCode;
+            if(keycode >= 96 && keycode <= 105) {
                 //TODO: move to jsphi.js
                 //send_message(KEYPAD_COMMAND[keycode - 96]);
                 km(KEYPAD_COMMAND[keycode - 96]);
                 //end TODO
                 $('#text').val('');
-                e.preventDefault();
             }
+            if(keycode === 9) {
+                $('#text').focus();
+            }
+            e.preventDefault();
         });
 
         $('#map_size').keydown(function(e){
-            if(e.keyCode === 13) {
+            if (e.keyCode === 13) {
                 phiUI.changeMapScale($('#map_size').val());
                 $('#map_size').val('');
             }

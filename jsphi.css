@@ -9,6 +9,10 @@
     float: left;
 }
 
+#control {
+    width: 10px;
+}
+
 #options {
     float: left;
     padding: 0 50px;
