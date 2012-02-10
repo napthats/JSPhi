@@ -12,6 +12,70 @@ $(document).ready(function() {
     NS_JSPHI.CLIENT_VERSION = '05103010';
     var NS_WEBSOCKET = com.napthats.websocket;
     var URL_WEBSOCKT = 'ws://localhost:8080/ws/';
+    var CONTROL_COMMAND = {
+        49: ['1'],
+        50: ['2'],
+        51: ['3'],
+        52: ['4'],
+        53: ['5'],
+        54: ['6'],
+        55: ['7'],
+        56: ['8'],
+        57: ['9'],
+        65: ['read'],
+        66: ['board'],
+        67: ['use'],
+        68: ['erase'],
+        70: ['floor item'],
+        72: ['hi'],
+        77: ['check', 'look'],
+        //80: ['pay'],
+        81: ['equip'],
+        82: ['spells'],
+        83: ['write'],
+        86: ['sort'],
+        87: ['unequip'],
+        88: ['put'],
+        89: ['y'],
+        90: ['get'],
+        96: ['check'],
+        97: ['hit'],
+        98: ['go b'],
+        99: ['cast'],
+        100: ['go l'],
+        101: ['turn b'],
+        102: ['go r'],
+        103: ['turn l'],
+        104: ['go f'],
+        105: ['turn r'],
+        106: ['use'],
+        107: ['get'],
+        109: ['put'],
+        110: ['.'],
+        111: ['equip'],
+        190: ['.']
+    };
+    var CONTROL_COMMAND_SHIFT = {
+        65: ['cast', 'analyze'],
+        66: ['cast', 'call'],
+        67: ['cast', 'create'],
+        68: ['cast', 'detect'],
+        69: ['cast', 'eagle eye'],
+        70: ['cast', 'forget'],
+        73: ['cast', 'identify'],
+        75: ['cast', 'list'],
+        76: ['cast', 'wizard lock'],
+        77: ['cast', 'disappear'],
+        78: ['cast', 'appear'],
+        80: ['cast', 'party eye'],
+        81: ['cast', 'wizard light'],
+        82: ['cast', 'return'],
+        83: ['cast', 'search'],
+        85: ['cast', 'unlock'],
+        87: ['cast', 'wizard eye'],
+        88: ['cast', 'charge spell'],
+        90: ['cast', 'destroy']
+    };
     var phiUI;
     var commandExecutor;
     var ws;
@@ -110,6 +174,45 @@ $(document).ready(function() {
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
     commandExecutor.bind('change_world', changeWorld);
     commandExecutor.bind('finish_newuser', finishNewuser);
+
+    //keypad control and shortcut key
+    (function(){
+        var isShiftPressed = false;
+
+        phiUI.bind('control_keydown', function(e){
+            var keycode = e.keyCode;
+            if (keycode === 9) {
+                $('#text').focus();
+            }
+            if (keycode === 16) {
+                isShiftPressed = true;
+            }
+            if (isShiftPressed) {
+                if (CONTROL_COMMAND_SHIFT[keycode]) {
+                    var commands = CONTROL_COMMAND_SHIFT[keycode];
+                    for (var i = 0; i < commands.length; i++) {
+                        ws.send(commands[i]);
+                    }
+                }
+            }
+            else {
+                if (CONTROL_COMMAND[keycode]) {
+                    var commands = CONTROL_COMMAND[keycode];
+                    for (var i = 0; i < commands.length; i++) {
+                        ws.send(commands[i]);
+                    }
+                }
+            }
+            e.preventDefault();
+        });
+
+        phiUI.bind('control_keyup', function(e) {
+            var keycode = e.keyCode;
+            if (keycode === 16) {
+                isShiftPressed = false;
+            }
+        });
+    })();
 });
 
 

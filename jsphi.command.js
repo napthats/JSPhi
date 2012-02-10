@@ -21,6 +21,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         'mail':     'DM > OK ? [y/n]'
     };
 
+
     ns.makeCommandExecutor = function(_phiUI, _ws) {
         var commandExecutor = {};
         var phiUI = _phiUI;

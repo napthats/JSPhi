@@ -13,70 +13,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
 (function() {
     var ns = com.napthats.jsphi;
-    var CONTROL_COMMAND = {
-        49: ['1'],
-        50: ['2'],
-        51: ['3'],
-        52: ['4'],
-        53: ['5'],
-        54: ['6'],
-        55: ['7'],
-        56: ['8'],
-        57: ['9'],
-        65: ['read'],
-        66: ['board'],
-        67: ['use'],
-        68: ['erase'],
-        70: ['floor item'],
-        72: ['hi'],
-        77: ['check', 'look'],
-        //80: ['pay'],
-        81: ['equip'],
-        82: ['spells'],
-        83: ['write'],
-        86: ['sort'],
-        87: ['unequip'],
-        88: ['put'],
-        89: ['y'],
-        90: ['get'],
-        96: ['check'],
-        97: ['hit'],
-        98: ['go b'],
-        99: ['cast'],
-        100: ['go l'],
-        101: ['turn b'],
-        102: ['go r'],
-        103: ['turn l'],
-        104: ['go f'],
-        105: ['turn r'],
-        106: ['use'],
-        107: ['get'],
-        109: ['put'],
-        110: ['.'],
-        111: ['equip'],
-        190: ['.']
-    };
-    var CONTROL_COMMAND_SHIFT = {
-        65: ['cast', 'analyze'],
-        66: ['cast', 'call'],
-        67: ['cast', 'create'],
-        68: ['cast', 'detect'],
-        69: ['cast', 'eagle eye'],
-        70: ['cast', 'forget'],
-        73: ['cast', 'identify'],
-        75: ['cast', 'list'],
-        76: ['cast', 'wizard lock'],
-        77: ['cast', 'disappear'],
-        78: ['cast', 'appear'],
-        80: ['cast', 'party eye'],
-        81: ['cast', 'wizard light'],
-        82: ['cast', 'return'],
-        83: ['cast', 'search'],
-        85: ['cast', 'unlock'],
-        87: ['cast', 'wizard eye'],
-        88: ['cast', 'charge spell'],
-        90: ['cast', 'destroy']
-    };
     var MAP_WIDTH = 7;
     var MAP_HEIGHT = 7;
     var CHIP_SIZE = 32;
@@ -92,8 +28,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '?', '?', '?', '?', '?', '?'
     ];
     var ANIMATION_FRAME_RATE = 500;
-    //keypad control (tentative)
-    var km = function(){};
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -184,9 +118,11 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         }
                     });
                     break;
-                //tentative
-                case 'keypad':
-                    km = function(kc){func(kc)};
+                case 'control_keydown':
+                    $('#control').keydown(function(e){func(e)});
+                    break;
+                case 'control_keyup':
+                    $('#control').keyup(function(e){func(e)});
                     break;
                 case 'phirc_load':
                     $('#phirc_load').click(function(e) {
@@ -307,7 +243,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             }, ANIMATION_FRAME_RATE);
         });
 
-        //keypad control (tentative)
         $('#text').keydown(function(e){
             var keycode = e.keyCode;
             if(keycode === 13){
@@ -318,39 +253,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 e.preventDefault();
             }
         });
-
-        (function(){
-            var isShiftPressed = false;
-            $('#control').keydown(function(e){
-                var keycode = e.keyCode;
-                //debug
-                console.log(keycode);
-                if (keycode === 9) {
-                    $('#text').focus();
-                }
-                if (keycode === 16) {
-                    isShiftPressed = true;
-                }
-                else if (isShiftPressed) {
-                    if (CONTROL_COMMAND_SHIFT[keycode]) {
-                        km(CONTROL_COMMAND_SHIFT[keycode]);
-                    }
-                }
-                else {
-                    if (CONTROL_COMMAND[keycode]) {
-                        km(CONTROL_COMMAND[keycode]);
-                    }
-                }
-                e.preventDefault();
-            });
-
-            $('#control').keyup(function(e) {
-                var keycode = e.keyCode;
-                if (keycode === 16) {
-                    isShiftPressed = false;
-                }
-            });
-        })();
 
         $('#apply_options').click(function(e) {
             phiUI.changeMapScale($('#map_size').val());
