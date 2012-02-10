@@ -16,13 +16,17 @@ $(document).ready(function() {
     var commandExecutor;
     var ws;
     var userId;
+    var serverIpPort;
 
-    var login = function(id) {
+    var login = function() {
+        if (!userId) {
+            phiUI.showErrorMessage('Please set user id first.');
+            return;
+        }
         //tentative
-        ws.send('$open$:napthats.com:20017');
-        userId = id;
+        ws.send('$open$:' + serverIpPort);
         commandExecutor.setUserId(userId);
-        ws.send('#open ' + id);
+        ws.send('#open ' + userId);
         sendMessageEnterWorld();
     };
 
@@ -56,29 +60,52 @@ $(document).ready(function() {
         //end test
     };
 
+    var changeWorld = function(ipPort) {
+        serverIpPort = ipPort;
+        sendMessageEnterWorld();
+    };
+
     var finishNewuser = function(id) {
         userId = id;
         commandExecutor.setUserId(id);
         sendMessageEnterWorld();
     };
 
-    var startNewuser = function(name) {
-        ws.send('$open$:napthats.com:20017');
+    var startNewuser = function(name, ipPort) {
+        serverIpPort = ipPort;
+        ws.send('$open$:' + serverIpPort);
         commandExecutor.startNewuser(name);
     };
 
+    var loadPhirc = function(id, ipPort) {
+        userId = id;
+        serverIpPort = ipPort;
+        phiUI.showClientMessage('.phirc load completed.');
+    };
+
+    var showPhirc = function() {
+        if (userId) {
+            phiUI.showClientMessage(userId + ' ' + serverIpPort);
+        }
+        else {
+            phiUI.showErrorMessage('No user is prepared.');
+        }
+    };
+    
 
     ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
     phiUI = NS_JSPHI.makePhiUI();
-    phiUI.bind('send', function(msg){sendMessage(msg)});
-    phiUI.bind('login', function(id){login(id)});
+    phiUI.bind('send', sendMessage);
+    phiUI.bind('login', login);
     phiUI.bind('logout', logout);
-    phiUI.bind('newuser', function(name){startNewuser(name)});
+    phiUI.bind('newuser', startNewuser);
+    phiUI.bind('phirc_load', loadPhirc);
+    phiUI.bind('phirc_show', showPhirc);
     //tentative support
-    phiUI.bind('keypad', function(kc){ws.send(kc)});
+    phiUI.bind('keypad', ws.send);
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
-    commandExecutor.bind('enter_world', sendMessageEnterWorld);
-    commandExecutor.bind('finish_newuser', function(id){finishNewuser(id)});
+    commandExecutor.bind('change_world', changeWorld);
+    commandExecutor.bind('finish_newuser', finishNewuser);
 });
 
 

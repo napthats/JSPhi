@@ -19,11 +19,27 @@
 }
 
 #map_size {
-    width: 40px;
+    width: 30px;
+}
+
+#log_height {
+    width: 30px;
 }
 
 #newuser_name {
-    width: 100px;
+    width: 120px;
+}
+
+#newuser_ip_port {
+    width: 120px;
+}
+
+#phirc_user_id{
+    width: 120px;
+}
+
+#phirc_ip_port {
+    width: 120px;
 }
 
 #pcgl {

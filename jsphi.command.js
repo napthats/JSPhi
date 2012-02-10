@@ -26,8 +26,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var phiUI = _phiUI;
         var ws = _ws;
         var userId;
-        var sendMessageEnterWorld = function(){};
         var finishNewuser = function(){};
+        var changeWorld = function(){};
 
         var makeTransferExec = function() {
             var state = 'ch-srv';
@@ -72,7 +72,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             phiUI.showClientMessage('Transfer completed.');
                             ws.send('$flip$');
                             ws.send('#ch-srv-ok');
-                            sendMessageEnterWorld();
+                            changeWorld(ip + ':' + port);
                             commandExecutor.exec = normalExec;
                             ws.send('$closesub$');
                             return;
@@ -268,8 +268,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         commandExecutor.bind = function(type, func) {
             switch (type) {
-                case 'enter_world':
-                    sendMessageEnterWorld = func;
+                case 'change_world':
+                    changeWorld = func;
                     break;
                 case 'finish_newuser':
                     finishNewuser = function(id){func(id)};

@@ -101,17 +101,20 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     });
                     break;
                 case 'login':
-                    $('#login').click(function(e){func($('#chara_id').val())});
+                    $('#login').click(function(e){func()});
                     break;
                 case 'logout':
                     $('#logout').click(function(e){func()});
                     break;
+                case 'phirc_show':
+                    $('#phirc_show').click(function(e){func()});
+                    break;
                 case 'newuser':
                     $('#newuser').click(function(e){
                         var newuserName;
-                        if (newuserName = $('#newuser_name').val()) {
-                            func(newuserName);
-                            $('#newuser_name').val('');
+                        var ipPort;
+                        if ((newuserName = $('#newuser_name').val()) && (ipPort = $('#newuser_ip_port').val())) {
+                            func(newuserName, ipPort);
                         }
                         else {
                             phiUI.showErrorMessage('Please set user name');
@@ -121,6 +124,18 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 //tentative
                 case 'keypad':
                     km = function(kc){func(kc)};
+                    break;
+                case 'phirc_load':
+                    $('#phirc_load').click(function(e) {
+                        var userId;
+                        var ipPort;
+                        if ((userId = $('#phirc_user_id').val()) && (ipPort = $('#phirc_ip_port').val())) {
+                            func(userId, ipPort);
+                        }
+                        else {
+                            phiUI.showErrorMessage('Please set user id and ip_port');
+                        }
+                    });
                     break;
                 default:
                     phiUI.showErrorMessage('assertion error.');
@@ -256,12 +271,17 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             e.preventDefault();
         });
 
-        $('#map_size').keydown(function(e){
-            if (e.keyCode === 13) {
-                phiUI.changeMapScale($('#map_size').val());
-                $('#map_size').val('');
-            }
+        $('#apply_options').click(function(e) {
+            phiUI.changeMapScale($('#map_size').val());
+            $('#log').css('height', $('#log_height').val() + 'px');
         });
+
+        $('#map_size').val('1');
+        $('#log_height').val('400');
+        $('#newuser_name').val('newuser');
+        $('#newuser_ip_port').val('napthats.com:20017');
+        $('#phirc_user_id').val('guest1');
+        $('#phirc_ip_port').val('napthats.com:20017');
 
         return phiUI;
     };
