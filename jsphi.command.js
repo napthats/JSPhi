@@ -14,6 +14,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var ns = com.napthats.jsphi;
     var COMMAND_WS_CLOSE = '$close$';
     var TYPE_NORMAL_MESSAGE = '#NORMAL_MESSAGE#';
+    var MESSAGE_NEWUSER = {
+        'newuser':  'DM > Please enter your name (within 31 letters):',
+        'name':     'DM > Please enter your password (within 6 letters):',
+        'password': 'DM > Plese enter your E-Mail address:',
+        'mail':     'DM > OK ? [y/n]'
+    };
 
     ns.makeCommandExecutor = function(_phiUI, _ws) {
         var commandExecutor = {};
@@ -21,6 +27,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var ws = _ws;
         var userId;
         var sendMessageEnterWorld = function(){};
+        var finishNewuser = function(){};
 
         var makeTransferExec = function() {
             var state = 'ch-srv';
@@ -83,6 +90,54 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             commandExecutor.exec = normalExec;
                             return;
                         }
+                }
+            }
+        };
+
+        var makeNewuserExec = function(_name) {
+            var state = 'newuser';
+            var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var name = _name;
+            var passwd = '';
+            for (var i = 0; i < 6; i++) {
+                passwd += chars[Math.floor(Math.random() * chars.length)];
+            }
+
+            ws.send('#open newuser');
+            ws.send('#version-cli ' + ns.CLIENT_VERSION);
+
+            return function(command) {
+                switch(state) {
+                    case 'newuser':
+                        if(command.data === MESSAGE_NEWUSER['newuser']) {
+                            ws.send(name);
+                            state = 'name';
+                        }
+                        break;
+                    case 'name':
+                        if(command.data === MESSAGE_NEWUSER['name']) {
+                            ws.send(passwd);
+                            state = 'password';
+                        }
+                        break;
+                    case 'password':
+                        if(command.data === MESSAGE_NEWUSER['password']) {
+                            ws.send('@');
+                            state = 'mail';
+                        }
+                        break;
+                    case 'mail':
+                        if(command.data === MESSAGE_NEWUSER['mail']) {
+                            ws.send('y');
+                            state = 'finish';
+                        }
+                        break;
+                    case 'finish':
+                        if(command.type === 'set-user-id') {
+                            commandExecutor.exec = normalExec;
+                            finishNewuser(command.data);
+                        }
+                        break;
                 }
             }
         };
@@ -152,14 +207,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'ex-eagleeye':
                     phiUI.showErrorMessage('Not support eagleeye.');
                     break;
-                case 'set-user-id':
-                    phiUI.showClientMessage('Not support registration.');
-                    break;
-                case 'rsv-ok':
-                case 'trs_no':
-                case 'trs_ok':
-                    phiUI.showErrorMessage('Unexpected transfer command.');
-                    break;
 
                 //just ignore
                 case 's-edit':
@@ -185,6 +232,14 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     break;
 
                 //should not receive
+                case 'set-user-id':
+                    phiUI.showClientMessage('Unexpected registration command.');
+                    break;
+                case 'rsv-ok':
+                case 'trs_no':
+                case 'trs_ok':
+                    phiUI.showErrorMessage('Unexpected transfer command.');
+                    break;
                 case 'end-list':
                 case 'end-more':
                 case 'code-euc-ok':
@@ -216,13 +271,20 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'enter_world':
                     sendMessageEnterWorld = func;
                     break;
+                case 'finish_newuser':
+                    finishNewuser = function(id){func(id)};
+                    break;
                 default:
-                    phiUI.showError('assertion error.');
+                    phiUI.showErrorMessage('assertion error.');
                     break;
             }
         };
 
         commandExecutor.exec = normalExec;
+
+        commandExecutor.startNewuser = function(name) {
+            commandExecutor.exec = makeNewuserExec(name);
+        };
 
         return commandExecutor;
     }

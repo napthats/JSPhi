@@ -16,7 +16,8 @@
 <body>
     <div id="map"></div>
     <div id="options">
-        map scale<input type="text" id="map_size">
+        map scale<input type="text" id="map_size"><br>
+        make new user<input type="text" id="newuser_name"><input type="button" id="newuser" value="make"/>
     </div>
     <pre><div id="log"></div></pre>
     <div>
@@ -34,13 +35,14 @@
         </select>
         <input type="button" id="login" value="login"/>
         <input type="button" id="logout" value="logout"/>
+
         <input type="text" id="control"/>
     </div>
     <div id="send_textbox">
         <input type="text" id="text"><input type="button" id="send" value="send">
     </div>
     <div><pre>
-control用テキストボックスにフォーカスしてテンキーで操作
+control用テキストボックス(logoutの右)にフォーカスしてテンキーで操作
 2, 4, 6, 8: 移動
 5, 7, 9: 方向転換
 1: 攻撃

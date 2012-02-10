@@ -9,9 +9,9 @@
 
 $(document).ready(function() {
     var NS_JSPHI = com.napthats.jsphi;
+    NS_JSPHI.CLIENT_VERSION = '05103010';
     var NS_WEBSOCKET = com.napthats.websocket;
     var URL_WEBSOCKT = 'ws://localhost:8080/ws/';
-    var CLIENT_VERSION = '05103010';
     var phiUI;
     var commandExecutor;
     var ws;
@@ -45,7 +45,7 @@ $(document).ready(function() {
         //test default setting
         ws.send('#map-iv 1');
         ws.send('#status-iv 1');
-        ws.send('#version-cli ' + CLIENT_VERSION);
+        ws.send('#version-cli ' + NS_JSPHI.CLIENT_VERSION);
         ws.send('#ex-switch eagleeye=form');
         ws.send('#ex-map size=57');
         ws.send('#ex-map style=turn');
@@ -56,15 +56,29 @@ $(document).ready(function() {
         //end test
     };
 
+    var finishNewuser = function(id) {
+        userId = id;
+        commandExecutor.setUserId(id);
+        sendMessageEnterWorld();
+    };
+
+    var startNewuser = function(name) {
+        ws.send('$open$:napthats.com:20017');
+        commandExecutor.startNewuser(name);
+    };
+
+
     ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
     phiUI = NS_JSPHI.makePhiUI();
     phiUI.bind('send', function(msg){sendMessage(msg)});
     phiUI.bind('login', function(id){login(id)});
     phiUI.bind('logout', logout);
+    phiUI.bind('newuser', function(name){startNewuser(name)});
     //tentative support
     phiUI.bind('keypad', function(kc){ws.send(kc)});
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
     commandExecutor.bind('enter_world', sendMessageEnterWorld);
+    commandExecutor.bind('finish_newuser', function(id){finishNewuser(id)});
 });
 
 

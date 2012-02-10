@@ -106,6 +106,18 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'logout':
                     $('#logout').click(function(e){func()});
                     break;
+                case 'newuser':
+                    $('#newuser').click(function(e){
+                        var newuserName;
+                        if (newuserName = $('#newuser_name').val()) {
+                            func(newuserName);
+                            $('#newuser_name').val('');
+                        }
+                        else {
+                            phiUI.showErrorMessage('Please set user name');
+                        }
+                    });
+                    break;
                 //tentative
                 case 'keypad':
                     km = function(kc){func(kc)};
@@ -205,10 +217,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 type: 'default'
             }
         }];
-
-        //test
-        mapChipType = 'default2';
-        //end test
 
         chipDrawer.onload(function() {
             phiUI.showMap();
