@@ -102,7 +102,11 @@ $(document).ready(function() {
     phiUI.bind('phirc_load', loadPhirc);
     phiUI.bind('phirc_show', showPhirc);
     //tentative support
-    phiUI.bind('keypad', ws.send);
+    phiUI.bind('keypad', function(commandList){
+        for (var i = 0; i < commandList.length; i++) {
+            ws.send(commandList[i]);
+        }
+    });
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
     commandExecutor.bind('change_world', changeWorld);
     commandExecutor.bind('finish_newuser', finishNewuser);
