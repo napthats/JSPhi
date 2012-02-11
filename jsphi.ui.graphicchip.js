@@ -74,9 +74,16 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         'B*': 4,
         'R*': 5,
         'F*': 6,
-        'L*': 7
+        'L*': 7,
+        'Bl': 0,
+        'Rl': 1,
+        'Fl': 2,
+        'Ll': 3,
+        'Br': 0,
+        'Rr': 1,
+        'Fr': 2,
+        'Lr': 3
     };
-    var CHARA_CHIP_THIN_NUM = 4;
     var CHIP_FILE_PREFIX = {
         'chara': 'chips/chara/',
         'map': 'chips/map/'
@@ -216,12 +223,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
                             //load image
                             var chipOrd = CHARA_CHIP_ID_TO_TILE_ORD[chipId];
+                            var isThin = chipOrd < 4;
+                            var isLeft = chipId.length === 2 && chipId.charAt(1) === 'l';
+                            var isRight = chipId.length === 2 && chipId.charAt(1) === 'r';
                             chipCanvas.drawImage(
                                 tileSheet,
-                                (Math.floor(chipOrd / CHARA_TILE_HEIGHT) + (frame === 1 ? 1 : 0)) * (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), chipOrd % CHARA_TILE_HEIGHT * CHIP_SIZE,
-                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE,
-                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 4 : 0), 0,
-                                (chipOrd < CHARA_CHIP_THIN_NUM ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE
+                                (Math.floor(chipOrd / CHARA_TILE_HEIGHT) + (frame === 1 ? 1 : 0)) * (isThin ? CHIP_SIZE / 2 : CHIP_SIZE), chipOrd % CHARA_TILE_HEIGHT * CHIP_SIZE,
+                                (isThin ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE,
+                                (isLeft ? 0 : isRight ? CHIP_SIZE / 2 : isThin ? CHIP_SIZE / 4 : 0), 0,
+                                (isThin ? CHIP_SIZE / 2 : CHIP_SIZE), CHIP_SIZE
                             );
 
                             var chipImageData = chipCanvas.getImageData(0, 0, CHIP_SIZE, CHIP_SIZE);
@@ -258,6 +268,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 chipDrawer.loadTileSheet(tileType, tileName);
             }
 
+            //draw separating water chips
             if (tileType === 'map' && chipId.charAt(0) === '_') {
                 if (chipId.length !== 5) return;
                 for (var i = 0; i < 4; i++) {

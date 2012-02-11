@@ -184,8 +184,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     ws.send('#map');
                     break;
                 case 'm57':
-                    phiUI.showMap(command.data.map);
-                    phiUI.showObjects(command.data.objectList);
+                    phiUI.showMap(command.data.map, command.data.objectList);
                     break;
                 case 'list':
                 case 'more':

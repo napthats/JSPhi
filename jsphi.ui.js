@@ -18,21 +18,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var CHIP_SIZE = 32;
     var CANVAS_WIDTH_DEFAULT = 224;
     var CANVAS_HEIGHT_DEFAULT = 240;
-//    var INITIAL_MAP_LIST = [
-//        '?', '?', '?', '?', '?', '?', '?',
-//        '?', '>', '%', ' ', 'o', '=', '?',
-//        '?', '#', '|', '{', 'I', '@', '?',
-//        '?', ' ', ' ', ' ', ' ', 'H', '?',
-//        '?', '_', 'T', ':', '+', '/', '?',
-//        '?', '_', ':', ':', ':', 'H', '?',
-//        '?', '?', '?', '?', '?', '?', '?'
-//    ];
     var INITIAL_MAP_LIST = [
-        '?', '?', '?', '_', '?', '?', '?',
-        '?', '>', '_', '_', 'o', '=', '?',
-        '?', '#', '|', '{', 'I', '_', '?',
-        '?', ' ', ' ', ' ', ' ', '_', '_',
-        '?', '_', 'T', ':', '+', '_', '_',
+        '?', '?', '?', '?', '?', '?', '?',
+        '?', '>', '%', ' ', 'o', '=', '?',
+        '?', '#', '|', '{', 'I', '@', '?',
+        '?', ' ', ' ', ' ', ' ', 'H', '?',
+        '?', '_', 'T', ':', '+', '/', '?',
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
@@ -44,7 +35,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         [6, 3, 6, 3, 0, 9, 0, 'c'],
         [7, 3, 1, 8, 7, 3, 1, 'c']
     ];
-    var DIR_TO_AROUND_CHIP_STATE_ORD = [
+    var DIR_TO_AROUND_CHIP_STATE_POSITION = [
         [{x: -1, y: -1}, {x:  0, y: -1}, {x: -1, y:  0}],
         [{x:  0, y: -1}, {x:  1, y: -1}, {x:  1, y:  0}],
         [{x: -1, y:  0}, {x: -1, y:  1}, {x:  0, y:  1}],
@@ -63,8 +54,9 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var prevObjectList = [];
         var animationFrame = 0;
 
-        phiUI.showMap = function(mapData) {
+        phiUI.showMap = function(mapData, objectList) {
             if (mapData) prevMapData = mapData;
+            if (objectList) prevObjectList = objectList;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
             for (var x = 0; x < MAP_WIDTH; x++) {
@@ -72,13 +64,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     var chipData = prevMapData.mapChipList[x + y * MAP_WIDTH];
                     var chipId = chipData.chip;
 
-                    //construct separating water chips
+                    //construct water chip id for separating chips
                     if (chipId === '_') {
+                        //add suffix for each region (upper left, upper right, lower left, lower right)
                         for (var i = 0; i < 4; i++) {
                             var aroundChipState = 0;
 
-                            for (var j = 0; j < DIR_TO_AROUND_CHIP_STATE_ORD[i].length; j++) {
-                                var pos = DIR_TO_AROUND_CHIP_STATE_ORD[i][j];
+                            //make suffix with checking around chips
+                            for (var j = 0; j < DIR_TO_AROUND_CHIP_STATE_POSITION[i].length; j++) {
+                                var pos = DIR_TO_AROUND_CHIP_STATE_POSITION[i][j];
                                 if (x + pos.x < 0 || x + pos.x >= MAP_WIDTH || y + pos.y < 0 || y + pos.y >= MAP_HEIGHT) {
                                     aroundChipState += Math.pow(2, j);
                                 }
@@ -115,18 +109,41 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             chipDrawer.drawChip('map', mapChipType, 'B', x * CHIP_SIZE, y * CHIP_SIZE);
                         }
                     }
-                }
-            }
-        };
 
-        phiUI.showObjects = function(objectList) {
-            if (objectList) prevObjectList = objectList;
-            for (var i = 0; i < prevObjectList.length; i++) {
-                chipDrawer.drawChip(
-                    'chara', prevObjectList[i].graphic.name, prevObjectList[i].dir + (prevObjectList[i].graphic.gigantFlag ? '*' : '') + animationFrame,
-                    prevObjectList[i].x * CHIP_SIZE, prevObjectList[i].y * CHIP_SIZE
-                );
-                ctx.fillText(prevObjectList[i].name, prevObjectList[i].x * CHIP_SIZE, prevObjectList[i].y * CHIP_SIZE + CHIP_SIZE / 4);
+                    //object
+                    var objectListOnCurrentPosition = [];
+                    var charaNum = 0;
+                    for (var l = 0; l < prevObjectList.length; l++) {
+                        if (prevObjectList[l].x === x && prevObjectList[l].y === y) {
+                            objectListOnCurrentPosition.push(prevObjectList[l]);
+                            if (prevObjectList[l].type === 'character') {
+                                charaNum++;
+                            }
+                        }
+                    }
+                    var isFirstCharacter = true;
+                    for (var k = 0; k < objectListOnCurrentPosition.length; k++) {
+                        var phiObject = objectListOnCurrentPosition[k];
+                        var suffix =
+                            phiObject.graphic.gigantFlag ? '*' :
+                                (charaNum < 2 || phiObject.type !== 'character') ? '' :
+                                    isFirstCharacter ? 'l' : 'r';
+                        if (suffix === 'l') isFirstCharacter = false;
+                        
+                        chipDrawer.drawChip(
+                            'chara',
+                            phiObject.graphic.name,
+                            phiObject.dir + suffix + animationFrame,
+                            phiObject.x * CHIP_SIZE,
+                            phiObject.y * CHIP_SIZE + CHIP_SIZE / 6
+                        );
+                        ctx.fillText(
+                            phiObject.name,
+                            phiObject.x * CHIP_SIZE,
+                            phiObject.y * CHIP_SIZE + CHIP_SIZE / 4
+                        );
+                    }
+                }
             }
         };
 
@@ -289,12 +306,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         chipDrawer.onload(function() {
             phiUI.showMap();
-            phiUI.showObjects();
             //Animation
             setInterval(function() {
                 animationFrame = animationFrame ? 0 : 1;
                 phiUI.showMap();
-                phiUI.showObjects();
             }, ANIMATION_FRAME_RATE);
         });
 
@@ -318,7 +333,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         $('#log_height').val('400');
         $('#newuser_name').val('name');
         $('#newuser_ip_port').val('napthats.com:20017');
-        $('#phirc_user_id').val('guest1');
+        $('#phirc_user_id').val('guest2');
         $('#phirc_ip_port').val('napthats.com:20017');
 
         return phiUI;
