@@ -41,14 +41,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         [{x: -1, y:  0}, {x: -1, y:  1}, {x:  0, y:  1}],
         [{x:  1, y:  0}, {x:  0, y:  1}, {x:  1, y:  1}]
     ];
+    var FONT_DEFAULT = 'normal bold 8px monospace';
 
     ns.makePhiUI = function() {
         var phiUI = {};
         var mapChipType = 'default';
         var ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = CANVAS_WIDTH_DEFAULT;
-        ctx.canvas.height = CANVAS_HEIGHT_DEFAULT;
-        $('#map').append(ctx.canvas);
         var chipDrawer = ns.makeChipDrawer(ctx);
         var prevMapData = {};
         var prevObjectList = [];
@@ -135,13 +133,18 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             phiObject.graphic.name,
                             phiObject.dir + suffix + animationFrame,
                             phiObject.x * CHIP_SIZE,
-                            phiObject.y * CHIP_SIZE + CHIP_SIZE / 6
+                            phiObject.y * CHIP_SIZE + (chipId.charAt(0) === '_' ? CHIP_SIZE / 3 : CHIP_SIZE / 6),
+                            CHIP_SIZE,
+                            chipId.charAt(0) === '_' ? CHIP_SIZE / 6 * 5: CHIP_SIZE
                         );
+                        ctx.save();
+                        ctx.fillStyle = '#FFFFFF';
                         ctx.fillText(
                             phiObject.name,
                             phiObject.x * CHIP_SIZE,
-                            phiObject.y * CHIP_SIZE + CHIP_SIZE / 4
+                            phiObject.y * CHIP_SIZE + CHIP_SIZE
                         );
+                        ctx.restore();
                     }
                 }
             }
@@ -209,6 +212,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             ctx.canvas.width = CANVAS_WIDTH_DEFAULT * scale;
             ctx.canvas.height = CANVAS_HEIGHT_DEFAULT * scale;
             ctx.scale(scale, scale);
+            ctx.font = FONT_DEFAULT;
         };
 
         //show normal message with phi style tags
@@ -335,6 +339,11 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         $('#newuser_ip_port').val('napthats.com:20017');
         $('#phirc_user_id').val('guest2');
         $('#phirc_ip_port').val('napthats.com:20017');
+
+        ctx.canvas.width = CANVAS_WIDTH_DEFAULT;
+        ctx.canvas.height = CANVAS_HEIGHT_DEFAULT;
+        $('#map').append(ctx.canvas);
+        ctx.font = FONT_DEFAULT;
 
         return phiUI;
     };

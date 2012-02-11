@@ -252,7 +252,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             return tileSheet;
         };
 
-        chipDrawer.drawChip = function(tileType, tileName, chipId, x, y) {
+        chipDrawer.drawChip = function(tileType, tileName, chipId, x, y, w, h) {
             var drawTileName;
             //loading image completed
             if (chipCanvasList[tileType][tileName] && chipCanvasList[tileType][tileName][chipId]) {
@@ -272,11 +272,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             if (tileType === 'map' && chipId.charAt(0) === '_') {
                 if (chipId.length !== 5) return;
                 for (var i = 0; i < 4; i++) {
-                    ctx.drawImage(chipCanvasList[tileType][drawTileName]['_' + i + chipId.charAt(i + 1)], x, y);
+                    if (w && h) ctx.drawImage(chipCanvasList[tileType][drawTileName]['_' + i + chipId.charAt(i + 1)], 0, 0, w, h, x, y, w, h);
+                    else ctx.drawImage(chipCanvasList[tileType][drawTileName]['_' + i + chipId.charAt(i + 1)], x, y);
                 }
             }
             else {
-                ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], x, y);
+                if (w && h) ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], 0, 0, w, h, x, y, w, h);
+                else ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], x, y);
             }
         };
 
