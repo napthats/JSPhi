@@ -145,9 +145,14 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         var normalExec = function(command) {
             switch (command.type) {
+                //special command from Jetty or normal message
                 case TYPE_NORMAL_MESSAGE:
                     phiUI.showMessage(command.data);
                     break;
+                case '$cnt-no':
+                    phiUI.showErrorMessage('Cannot connect a server.');
+                    break;
+
                 case 'name':
                     //test
                     //phiUI.setUserName(command.data);
@@ -191,9 +196,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'ch-srv':
                     (commandExecutor.exec = makeTransferExec())(command);
                     break;
-                case '$cnt-no':
-                    phiUI.showErrorMessage('Cannot connect a server.');
+                case 'mapset':
+                    phiUI.setMapChipType(command.data);
                     break;
+
 
                 //should deal with later
                 case 'priv':
@@ -223,7 +229,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'leave-win':
                 case 'enter-win':
                 case 'user':
-                case 'mapset':
                 case 'bgm':
                 case 'ex-chr-conflict':
                 case 'mapset-define':
