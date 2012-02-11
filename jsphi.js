@@ -82,7 +82,9 @@ $(document).ready(function() {
     var userId;
     var serverIpPort;
 
-    var login = function() {
+    var login = function(id, ipPort) {
+        userId = id;
+        serverIpPort = ipPort;
         if (!userId) {
             phiUI.showErrorMessage('Please set user id first.');
             return;
@@ -126,11 +128,15 @@ $(document).ready(function() {
 
     var changeWorld = function(ipPort) {
         serverIpPort = ipPort;
+        savePhirc(userId, serverIpPort);
+        phiUI.setPhirc(readPhircCookie(), userId + '@' + serverIpPort);
         sendMessageEnterWorld();
     };
 
     var finishNewuser = function(id) {
         userId = id;
+        savePhirc(userId, serverIpPort);
+        phiUI.setPhirc(readPhircCookie(), userId + '@' + serverIpPort);
         commandExecutor.setUserId(id);
         sendMessageEnterWorld();
     };
@@ -141,9 +147,11 @@ $(document).ready(function() {
         commandExecutor.startNewuser(name);
     };
 
-    var loadPhirc = function(id, ipPort) {
+    var importPhirc = function(id, ipPort) {
         userId = id;
         serverIpPort = ipPort;
+        savePhirc(userId, serverIpPort);
+        phiUI.setPhirc(readPhircCookie(), userId + '@' + serverIpPort);
         phiUI.showClientMessage('.phirc load completed.');
     };
 
@@ -152,25 +160,73 @@ $(document).ready(function() {
             phiUI.showClientMessage(userId + ' ' + serverIpPort);
         }
         else {
-            phiUI.showErrorMessage('No user is prepared.');
+            phiUI.showErrorMessage('No user login.');
         }
     };
-    
 
+    var savePhirc = function(id, ipPort) {
+        var savedPhircList = readPhircCookie();
+        if (!savedPhircList) savedPhircList = [];
+        for (var i = 0; i < savedPhircList.length; i++) {
+            if (id === savedPhircList[i][0]) {
+                savedPhircList[i][1] = ipPort;
+                break;
+            }
+        }
+        if (i === savedPhircList.length) {
+            savedPhircList.push([id, ipPort]);
+        }
+        writePhircCookie(savedPhircList);
+    };
+
+    //var loadPhirc = function(id) {
+    //    var savedPhircList = readPhircCookie();
+    //    if (!savedPhircList) return;
+    //    for (var i = 0; i < savedPhircList.length; i++) {
+    //        if (id === savedPhircList[i][0]) {
+    //            return savedPhircList[i];
+    //        }
+    //    }
+    //};
+
+    var readPhircCookie = function() {
+        var allcookies = document.cookie;
+        var pos = allcookies.indexOf('phirc=');
+        var value;
+        if (pos !== -1) {
+            var start = pos + 6;
+            var end = allcookies.indexOf(';', start);
+            if (end === -1) end = allcookies.length;
+            value = allcookies.substring(start, end);
+            value = decodeURIComponent(value);
+        }
+        if (!value) return;
+        var phircList = [];
+        var _phircList = value.split(',');
+        for (var i = 0; i < _phircList.length; i++) {
+            phircList.push(_phircList[i].split('@'));
+        }
+        return phircList;
+    };
+
+    var writePhircCookie = function(_phircList) {
+        var phircList = _phircList;
+        for (var i = 0; i < phircList.length; i++) {
+            phircList[i] = phircList[i].join('@');
+        }
+        document.cookie = 'phirc=' + encodeURIComponent(phircList.join(',')) + '; max-age=' + (60*60*24*365*10);
+    };
+
+    
     ws = NS_WEBSOCKET.connectWebSocket(URL_WEBSOCKT, recvMessage);
     phiUI = NS_JSPHI.makePhiUI();
+    phiUI.setPhirc(readPhircCookie());
     phiUI.bind('send', sendMessage);
     phiUI.bind('login', login);
     phiUI.bind('logout', logout);
     phiUI.bind('newuser', startNewuser);
-    phiUI.bind('phirc_load', loadPhirc);
+    phiUI.bind('phirc_load', importPhirc);
     phiUI.bind('phirc_show', showPhirc);
-    //tentative support
-    phiUI.bind('keypad', function(commandList){
-        for (var i = 0; i < commandList.length; i++) {
-            ws.send(commandList[i]);
-        }
-    });
     commandExecutor = NS_JSPHI.makeCommandExecutor(phiUI, ws);
     commandExecutor.bind('change_world', changeWorld);
     commandExecutor.bind('finish_newuser', finishNewuser);
@@ -181,26 +237,17 @@ $(document).ready(function() {
 
         phiUI.bind('control_keydown', function(e){
             var keycode = e.keyCode;
+            var controlCommand = isShiftPressed ? CONTROL_COMMAND_SHIFT : CONTROL_COMMAND;
             if (keycode === 9) {
                 $('#text').focus();
             }
             if (keycode === 16) {
                 isShiftPressed = true;
             }
-            if (isShiftPressed) {
-                if (CONTROL_COMMAND_SHIFT[keycode]) {
-                    var commands = CONTROL_COMMAND_SHIFT[keycode];
-                    for (var i = 0; i < commands.length; i++) {
-                        ws.send(commands[i]);
-                    }
-                }
-            }
-            else {
-                if (CONTROL_COMMAND[keycode]) {
-                    var commands = CONTROL_COMMAND[keycode];
-                    for (var i = 0; i < commands.length; i++) {
-                        ws.send(commands[i]);
-                    }
+            if (controlCommand[keycode]) {
+                var commands = controlCommand[keycode];
+                for (var i = 0; i < commands.length; i++) {
+                    ws.send(commands[i]);
                 }
             }
             e.preventDefault();

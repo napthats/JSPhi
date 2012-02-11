@@ -28,6 +28,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         '?', '?', '?', '?', '?', '?', '?'
     ];
     var ANIMATION_FRAME_RATE = 500;
+    var PHIRC_DEFAULT = ['guest1', 'napthats.com:20017'];
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -98,7 +99,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     });
                     break;
                 case 'login':
-                    $('#login').click(function(e){func()});
+                    $('#login').click(function(e){
+                        var phirc = $('#chara_id').val().split('@');
+                        func(phirc[0], phirc[1]);
+                    });
                     break;
                 case 'logout':
                     $('#logout').click(function(e){func()});
@@ -202,6 +206,16 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             mapChipType = _mapChipType;
         };
 
+        phiUI.setPhirc = function(phircList, selected) {
+            $('.phirc_option').remove();
+            $('<option/>').attr('value', PHIRC_DEFAULT.join('@')).text(PHIRC_DEFAULT[0]).addClass('phirc_option').appendTo('#chara_id');
+            if (!phircList) return;
+            for (var i = 0; i < phircList.length; i++) {
+                $('<option/>').attr('value', phircList[i].join('@')).text(phircList[i][0]).addClass('phirc_option').appendTo('#chara_id');
+            }
+            if (selected) $('#chara_id').val(selected);
+        };
+
 
         //set initial map and object
         prevMapData.mapChipList = [];
@@ -261,7 +275,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         $('#map_size').val('1');
         $('#log_height').val('400');
-        $('#newuser_name').val('newuser');
+        $('#newuser_name').val('name');
         $('#newuser_ip_port').val('napthats.com:20017');
         $('#phirc_user_id').val('guest1');
         $('#phirc_ip_port').val('napthats.com:20017');
