@@ -22,7 +22,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         'o': 5,
         ':': 1,
         '+': 2,
-        '_': 4,
         'x': 14,
         '/': 32,
         '>': 33,
@@ -64,6 +63,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         //board
         'b': 36,
         'B': 34
+        //water have special method for draw
+        //,'_': 4
     };
     var CHARA_CHIP_ID_TO_TILE_ORD = {
         'B': 0,
@@ -101,14 +102,15 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             var tileSheet = new Image();
             tileSheet.src = CHIP_FILE_PREFIX[tileType] + tileName + CHIP_FILE_SUFFIX[tileType];
             chipCanvasList[tileType][tileName] = {};
+            chipCanvasList[tileType][tileName]['DUMMY'] = true;
 
             //make canvas after loading image
             if (tileType === 'map') {
                 tileSheet.addEventListener('load', function() {
                     for (var chipId in MAP_CHIP_ID_TO_TILE_ORD) {
                         var chipCanvas = document.createElement('canvas').getContext('2d');
-                        chipCanvas.width = CHIP_SIZE;
-                        chipCanvas.height = CHIP_SIZE;
+                        chipCanvas.width = MAP_CHIP_WIDTH;
+                        chipCanvas.height = MAP_CHIP_HEIGHT;
 
                         //load image
                         var chipOrd = MAP_CHIP_ID_TO_TILE_ORD[chipId];
@@ -170,12 +172,34 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                         chipCanvasList[tileType][tileName][chipId] = chipCanvas.canvas;
                     }
 
-                    //to render grass under tree
-                    var treeCtx = chipCanvasList[tileType][tileName]['T'].getContext('2d');
-                    treeCtx.save();
-                    treeCtx.globalCompositeOperation = 'destination-over';
-                    treeCtx.drawImage(chipCanvasList[tileType][tileName][':'], 0, 0);
-                    treeCtx.restore();
+                    //to draw grass under tree
+                    var treeChipCanvas = chipCanvasList[tileType][tileName]['T'].getContext('2d');
+                    treeChipCanvas.save();
+                    treeChipCanvas.globalCompositeOperation = 'destination-over';
+                    treeChipCanvas.drawImage(chipCanvasList[tileType][tileName][':'], 0, 0);
+                    treeChipCanvas.restore();
+
+                    //for separating water chip
+                    var WATER_ORD_TO_SUFFIX = [0,1,2,3,4,5,6,7,8,9,'a','b','c'];
+                    var WATER_ORD_TO_CHIP_ORD = [39,39,39,39,40,40,40,40,41,41,41,41,43];
+                    for (var dirOrd = 0; dirOrd < 4; dirOrd++) {
+                        for (var waterOrd = 0; waterOrd < WATER_ORD_TO_SUFFIX.length; waterOrd++) {
+                            var waterChipCanvas = document.createElement('canvas').getContext('2d');
+                            waterChipCanvas.width = MAP_CHIP_WIDTH;
+                            waterChipCanvas.height = MAP_CHIP_HEIGHT;
+
+                            waterChipCanvas.drawImage(
+                                tileSheet,
+                                WATER_ORD_TO_CHIP_ORD[waterOrd] % MAP_TILE_WIDTH * MAP_CHIP_WIDTH + (waterOrd % 2 ? MAP_CHIP_WIDTH / 2 : 0),
+                                Math.floor(WATER_ORD_TO_CHIP_ORD[waterOrd] / MAP_TILE_WIDTH) * MAP_CHIP_HEIGHT + MAP_CHIP_HEIGHT / 3 + (waterOrd % 4 >= 2 ? MAP_CHIP_HEIGHT / 3 : 0),
+                                MAP_CHIP_WIDTH / 2, MAP_CHIP_HEIGHT / 3,
+                                dirOrd % 2 ? MAP_CHIP_WIDTH / 2 : 0, MAP_CHIP_HEIGHT / 3 + (dirOrd % 4 >= 2 ? MAP_CHIP_HEIGHT /3 : 0),
+                                MAP_CHIP_WIDTH / 2, MAP_CHIP_HEIGHT / 3
+                            );
+
+                            chipCanvasList[tileType][tileName]['_' + dirOrd + WATER_ORD_TO_SUFFIX[waterOrd]] = waterChipCanvas.canvas;
+                        }
+                    }
                 }, false);
             }
             else if (tileType === 'chara') {
@@ -233,7 +257,16 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 drawTileName = DEFAULT_TILE_NAME[tileType];
                 chipDrawer.loadTileSheet(tileType, tileName);
             }
-            ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], x, y);
+
+            if (tileType === 'map' && chipId.charAt(0) === '_') {
+                if (chipId.length !== 5) return;
+                for (var i = 0; i < 4; i++) {
+                    ctx.drawImage(chipCanvasList[tileType][drawTileName]['_' + i + chipId.charAt(i + 1)], x, y);
+                }
+            }
+            else {
+                ctx.drawImage(chipCanvasList[tileType][drawTileName][chipId], x, y);
+            }
         };
 
         chipDrawer.onload = function(func) {onloadFunc = func};

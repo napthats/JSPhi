@@ -18,17 +18,38 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var CHIP_SIZE = 32;
     var CANVAS_WIDTH_DEFAULT = 224;
     var CANVAS_HEIGHT_DEFAULT = 240;
+//    var INITIAL_MAP_LIST = [
+//        '?', '?', '?', '?', '?', '?', '?',
+//        '?', '>', '%', ' ', 'o', '=', '?',
+//        '?', '#', '|', '{', 'I', '@', '?',
+//        '?', ' ', ' ', ' ', ' ', 'H', '?',
+//        '?', '_', 'T', ':', '+', '/', '?',
+//        '?', '_', ':', ':', ':', 'H', '?',
+//        '?', '?', '?', '?', '?', '?', '?'
+//    ];
     var INITIAL_MAP_LIST = [
-        '?', '?', '?', '?', '?', '?', '?',
-        '?', '>', '%', ' ', 'o', '=', '?',
-        '?', '#', '|', '{', 'I', '@', '?',
-        '?', ' ', ' ', ' ', ' ', 'H', '?',
-        '?', '_', 'T', ':', '+', '/', '?',
+        '?', '?', '?', '_', '?', '?', '?',
+        '?', '>', '_', '_', 'o', '=', '?',
+        '?', '#', '|', '{', 'I', '_', '?',
+        '?', ' ', ' ', ' ', ' ', '_', '_',
+        '?', '_', 'T', ':', '+', '_', '_',
         '?', '_', ':', ':', ':', 'H', '?',
         '?', '?', '?', '?', '?', '?', '?'
     ];
     var ANIMATION_FRAME_RATE = 500;
     var PHIRC_DEFAULT = ['guest1', 'napthats.com:20017'];
+    var WATER_CHIPS_CONSTRUCT_RULE = [
+        [4, 4, 0, 0, 2, 2, 'b', 'c'],
+        [5, 1, 5, 1, 2, 'a', 2, 'c'],
+        [6, 3, 6, 3, 0, 9, 0, 'c'],
+        [7, 3, 1, 8, 7, 3, 1, 'c']
+    ];
+    var DIR_TO_AROUND_CHIP_STATE_ORD = [
+        [{x: -1, y: -1}, {x:  0, y: -1}, {x: -1, y:  0}],
+        [{x:  0, y: -1}, {x:  1, y: -1}, {x:  1, y:  0}],
+        [{x: -1, y:  0}, {x: -1, y:  1}, {x:  0, y:  1}],
+        [{x:  1, y:  0}, {x:  0, y:  1}, {x:  1, y:  1}]
+    ];
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -42,27 +63,47 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var prevObjectList = [];
         var animationFrame = 0;
 
-
         phiUI.showMap = function(mapData) {
             if (mapData) prevMapData = mapData;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
                     var chipData = prevMapData.mapChipList[x + y * MAP_WIDTH];
                     var chipId = chipData.chip;
 
+                    //construct separating water chips
+                    if (chipId === '_') {
+                        for (var i = 0; i < 4; i++) {
+                            var aroundChipState = 0;
+
+                            for (var j = 0; j < DIR_TO_AROUND_CHIP_STATE_ORD[i].length; j++) {
+                                var pos = DIR_TO_AROUND_CHIP_STATE_ORD[i][j];
+                                if (x + pos.x < 0 || x + pos.x >= MAP_WIDTH || y + pos.y < 0 || y + pos.y >= MAP_HEIGHT) {
+                                    aroundChipState += Math.pow(2, j);
+                                }
+                                else {
+                                    var aroundChip = prevMapData.mapChipList[x + pos.x + (y + pos.y) * MAP_WIDTH].chip;
+                                    aroundChipState += (aroundChip === '_' || aroundChip === '?') ? Math.pow(2, j) : 0;
+                                }
+                            }
+
+                            chipId += WATER_CHIPS_CONSTRUCT_RULE[i][aroundChipState];
+                        }
+                    }
+
                     //ground and item
                     if (chipData.status && chipData.status.itemType) {
                         if (chipId === '%' || chipId === 'x') {
-                            chipDrawer.drawChip('map', mapChipType, chipData.chip + 'i' + chipData.status.itemType, x * CHIP_SIZE, y * CHIP_SIZE);
+                            chipDrawer.drawChip('map', mapChipType, chipId + 'i' + chipData.status.itemType, x * CHIP_SIZE, y * CHIP_SIZE);
                         }
                         else {
-                            chipDrawer.drawChip('map', mapChipType, chipData.chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                            chipDrawer.drawChip('map', mapChipType, chipId, x * CHIP_SIZE, y * CHIP_SIZE);
                             chipDrawer.drawChip('map', mapChipType, 'i' + chipData.status.itemType, x * CHIP_SIZE, y * CHIP_SIZE);
                         }
                     }
                     else {
-                        chipDrawer.drawChip('map', mapChipType, chipData.chip, x * CHIP_SIZE, y * CHIP_SIZE);
+                        chipDrawer.drawChip('map', mapChipType, chipId, x * CHIP_SIZE, y * CHIP_SIZE);
                     }
 
                     //board
