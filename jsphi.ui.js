@@ -285,7 +285,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             prevMapData.mapChipList.push({
                 chip: INITIAL_MAP_LIST[i],
                 status: {
-                    itemType: 0,
+                    itemType: i === 23 ? 6 : 0,
                     boardFlag: false,
                     roofFlag: false,
                     areaID: 0

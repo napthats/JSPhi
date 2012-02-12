@@ -148,24 +148,26 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
                             //for change item color by item_type
                             if (chipImageData.data[j * 4] === 255 && (chipImageData.data[j * 4 + 1] !== 255 || chipImageData.data[j * 4 + 2] !== 255)) {
-                                if (chipId === 'i1' || chipId === '%i1' || chipId === 'xi1') {
+                                if (chipId === 'i5' || chipId === '%i5' || chipId === 'xi5') {
                                     chipImageData.data[j * 4] = 0;
                                     chipImageData.data[j * 4 + 1] = 255;
                                     chipImageData.data[j * 4 + 2] = 255;
-                                }
-                                if (chipId === 'i2' || chipId === '%i2' || chipId === 'xi2') {
-                                    chipImageData.data[j * 4] = 0;
-                                    chipImageData.data[j * 4 + 1] = 255;
                                 }
                                 if (chipId === 'i3' || chipId === '%i3' || chipId === 'xi3') {
                                     chipImageData.data[j * 4] = 0;
-                                    chipImageData.data[j * 4 + 2] = 255;
+                                    chipImageData.data[j * 4 + 1] = 128;
                                 }
                                 if (chipId === 'i4' || chipId === '%i4' || chipId === 'xi4') {
+                                    chipImageData.data[j * 4] = 0;
+                                    chipImageData.data[j * 4 + 2] = 255;
+                                }
+                                if (chipId === 'i1' || chipId === '%i1' || chipId === 'xi1') {
                                     chipImageData.data[j * 4 + 1] = 255;
                                 }
-                                if (chipId === 'i5' || chipId === '%i5' || chipId === 'xi5') {
-                                    chipImageData.data[j * 4 + 2] = 255;
+                                if (chipId === 'i2' || chipId === '%i2' || chipId === 'xi2') {
+                                    chipImageData.data[j * 4] = 0;
+                                    chipImageData.data[j * 4 + 1] = 0;
+                                    chipImageData.data[j * 4 + 2] = 0;
                                 }
                                 if (chipId === 'i7' || chipId === '%i7' || chipId === 'xi7') {
                                     chipImageData.data[j * 4] = 255;
