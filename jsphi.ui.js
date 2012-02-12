@@ -42,6 +42,12 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         [{x:  1, y:  0}, {x:  0, y:  1}, {x:  1, y:  1}]
     ];
     var FONT_DEFAULT = 'normal bold 8px monospace';
+    var ST_GASIFY = '70';
+    var ST_SPELL = '20';
+    var ST_CAST = '21';
+    var ST_CAST_COMPLETE = '22';
+    var ST_ATTACK = '01';
+    var ST_DEFENCE = '02';
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -112,6 +118,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
                     //object
                     var objectListOnCurrentPosition = [];
+
+                    //count a number of characters in this place
                     var charaNum = 0;
                     for (var l = 0; l < currentObjectList.length; l++) {
                         if (currentObjectList[l].x === x && currentObjectList[l].y === y) {
@@ -121,6 +129,8 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             }
                         }
                     }
+
+                    //draw object and name
                     var isFirstCharacter = true;
                     for (var k = 0; k < objectListOnCurrentPosition.length; k++) {
                         var phiObject = objectListOnCurrentPosition[k];
@@ -129,16 +139,20 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                                 (charaNum < 2 || phiObject.type !== 'character') ? '' :
                                     isFirstCharacter ? 'l' : 'r';
                         if (suffix === 'l') isFirstCharacter = false;
-                        
+
+                        //object
                         chipDrawer.drawChip(
                             'chara',
                             phiObject.graphic.name,
-                            phiObject.dir + suffix + animationFrame,
+                            //animation stop when status is gasify
+                            phiObject.dir + suffix + (phiObject.graphic.status === ST_GASIFY ? 0 : animationFrame),
                             phiObject.x * CHIP_SIZE,
                             phiObject.y * CHIP_SIZE + (chipId.charAt(0) === '_' ? CHIP_SIZE / 3 : CHIP_SIZE / 6),
                             CHIP_SIZE,
                             chipId.charAt(0) === '_' ? CHIP_SIZE / 6 * 5: CHIP_SIZE
                         );
+
+                        //name
                         ctx.save();
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillText(
@@ -147,6 +161,35 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             phiObject.y * CHIP_SIZE + CHIP_SIZE
                         );
                         ctx.restore();
+
+                        //extra mark for graphic status
+                        var color = '';
+                        switch (phiObject.graphic.status) {
+                            case ST_SPELL:
+                            case ST_CAST:
+                            case ST_CAST_COMPLETE:
+                                color = 'blue';
+                                break;
+                            case ST_ATTACK:
+                                color = 'red';
+                                break;
+                            case ST_DEFENCE:
+                                color = 'yellow';
+                                break;
+                            default:
+                                break;
+                        }
+                        if (color) {
+                            ctx.save();
+                            ctx.fillStyle = color;
+                            ctx.textAlign = 'right';
+                            ctx.fillText(
+                                '■',
+                                phiObject.x * CHIP_SIZE + CHIP_SIZE,
+                                phiObject.y * CHIP_SIZE + CHIP_SIZE / 6
+                            );
+                            ctx.restore();
+                        }
                     }
                 }
             }
@@ -321,7 +364,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             name: '',
             graphic: {
                 name: 'PLAYER',
-                status: 'command',
+                status: '00',
                 gigantFlag: true,
                 type: 'default'
             }

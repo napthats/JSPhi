@@ -22,10 +22,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         B: 'background_object',
         F: 'effect_object'
     };
-    //using default (tentative)
-    var NUM_TO_GRAPHIC_STATUS = function(num) {
-        return 'command';
-    };
     var ns = com.napthats.jsphi;
     var currentMultilineMessageCommand = null; //multiline mode if it isn't null
     var multilineMessageLog = [];
@@ -83,10 +79,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                             result.dir = parameters.charAt(12);
                             result.name = parameters.substr(14, 31);
                             result.graphic = {
-                                status: NUM_TO_GRAPHIC_STATUS(parseInt(parameters.substr(46, 2))),
+                                status: parameters.substr(46, 2),
                                 name: parameters.substr(49, 15).replace(/\s+$/, ''),
                                 gigantFlag: parameters.charAt(65) === '*',
-                                type: NUM_TO_GRAPHIC_STATUS(parameters.substr(67,2))
+                                type: parameters.substr(67,2)
                             };
                             if (!(multilineMessageLog.objectList)) multilineMessageLog.objectList = [];
                             multilineMessageLog.objectList.push(result);

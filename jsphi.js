@@ -27,6 +27,7 @@ $(document).ready(function() {
         67: ['use'],
         68: ['erase'],
         70: ['floor item'],
+        71: ['guard'],
         72: ['hi'],
         77: ['check', 'look'],
         //80: ['pay'],
