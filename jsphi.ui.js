@@ -253,7 +253,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         };
 
         phiUI.changeMapScale = function(scale) {
-            $('#map').css('width', scale * CANVAS_WIDTH_DEFAULT + 'px').css('height', scale * CANVAS_HEIGHT_DEFAULT + 'px');
             ctx.canvas.width = CANVAS_WIDTH_DEFAULT * scale;
             ctx.canvas.height = CANVAS_HEIGHT_DEFAULT * scale;
             ctx.scale(scale, scale);

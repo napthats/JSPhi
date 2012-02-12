@@ -153,23 +153,28 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                                     chipImageData.data[j * 4 + 1] = 255;
                                     chipImageData.data[j * 4 + 2] = 255;
                                 }
-                                if (chipId === 'i3' || chipId === '%i3' || chipId === 'xi3') {
+                                else if (chipId === 'i3' || chipId === '%i3' || chipId === 'xi3') {
                                     chipImageData.data[j * 4] = 0;
                                     chipImageData.data[j * 4 + 1] = 128;
                                 }
-                                if (chipId === 'i4' || chipId === '%i4' || chipId === 'xi4') {
+                                else if (chipId === 'i4' || chipId === '%i4' || chipId === 'xi4') {
                                     chipImageData.data[j * 4] = 0;
                                     chipImageData.data[j * 4 + 2] = 255;
                                 }
-                                if (chipId === 'i1' || chipId === '%i1' || chipId === 'xi1') {
+                                else if (chipId === 'i1' || chipId === '%i1' || chipId === 'xi1') {
                                     chipImageData.data[j * 4 + 1] = 255;
                                 }
-                                if (chipId === 'i2' || chipId === '%i2' || chipId === 'xi2') {
+                                else if (chipId === 'i2' || chipId === '%i2' || chipId === 'xi2') {
                                     chipImageData.data[j * 4] = 0;
                                     chipImageData.data[j * 4 + 1] = 0;
                                     chipImageData.data[j * 4 + 2] = 0;
                                 }
-                                if (chipId === 'i7' || chipId === '%i7' || chipId === 'xi7') {
+                                else if (chipId === 'i6' || chipId === '%i6' || chipId === 'xi6') {
+                                    chipImageData.data[j * 4] = 255;
+                                    chipImageData.data[j * 4 + 1] = 0;
+                                    chipImageData.data[j * 4 + 2] = 0;
+                                }
+                                else if (chipId === 'i7' || chipId === '%i7' || chipId === 'xi7') {
                                     chipImageData.data[j * 4] = 255;
                                     chipImageData.data[j * 4 + 1] = 255;
                                     chipImageData.data[j * 4 + 2] = 255;

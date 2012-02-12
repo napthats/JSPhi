@@ -4,19 +4,17 @@
 }
 
 #map {
-	width: 224px;
-    height: 240px;
     float: left;
 }
 
 #control {
     width: 10px;
+    clear: left;
 }
 
 #options {
-    float: left;
-    padding: 0 50px;
-}
+    clear: left;
+ }
 
 #map_size {
     width: 30px;
@@ -71,11 +69,6 @@
   overflow: scroll;
   width: 800px;
   height: 400px;
-  clear: left;
-}
-
-#place {
-    clear: left;
 }
 
 #text {
