@@ -48,18 +48,20 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         var mapChipType = 'default';
         var ctx = document.createElement('canvas').getContext('2d');
         var chipDrawer = ns.makeChipDrawer(ctx);
-        var prevMapData = {};
-        var prevObjectList = [];
+        var currentMapData = {};
+        var currentObjectList = [];
         var animationFrame = 0;
 
         phiUI.showMap = function(mapData, objectList) {
-            if (mapData) prevMapData = mapData;
-            if (objectList) prevObjectList = objectList;
+            if (mapData) currentMapData = mapData;
+            if (objectList) currentObjectList = objectList;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            if (currentMapData.dir) phiUI.setDirectionName(currentMapData.dir);
 
             for (var x = 0; x < MAP_WIDTH; x++) {
                 for (var y = 0; y < MAP_HEIGHT; y++) {
-                    var chipData = prevMapData.mapChipList[x + y * MAP_WIDTH];
+                    var chipData = currentMapData.mapChipList[x + y * MAP_WIDTH];
                     var chipId = chipData.chip;
 
                     //construct water chip id for separating chips
@@ -75,7 +77,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                                     aroundChipState += Math.pow(2, j);
                                 }
                                 else {
-                                    var aroundChip = prevMapData.mapChipList[x + pos.x + (y + pos.y) * MAP_WIDTH].chip;
+                                    var aroundChip = currentMapData.mapChipList[x + pos.x + (y + pos.y) * MAP_WIDTH].chip;
                                     aroundChipState += (aroundChip === '_' || aroundChip === '?') ? Math.pow(2, j) : 0;
                                 }
                             }
@@ -111,10 +113,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     //object
                     var objectListOnCurrentPosition = [];
                     var charaNum = 0;
-                    for (var l = 0; l < prevObjectList.length; l++) {
-                        if (prevObjectList[l].x === x && prevObjectList[l].y === y) {
-                            objectListOnCurrentPosition.push(prevObjectList[l]);
-                            if (prevObjectList[l].type === 'character') {
+                    for (var l = 0; l < currentObjectList.length; l++) {
+                        if (currentObjectList[l].x === x && currentObjectList[l].y === y) {
+                            objectListOnCurrentPosition.push(currentObjectList[l]);
+                            if (currentObjectList[l].type === 'character') {
                                 charaNum++;
                             }
                         }
@@ -278,11 +280,28 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             if (selected) $('#chara_id').val(selected);
         };
 
+        phiUI.setDirectionName = function(dirName) {
+            dirName = dirName.split('<').join('&lt;');
+            dirName = dirName.split('&').join('&amp;');
+            $('#dir').text(dirName);
+        };
+
+        phiUI.setAreaName = function(areaName) {
+            areaName = areaName.split('<').join('&lt;');
+            areaName = areaName.split('&').join('&amp;');
+            $('#area').text(areaName);
+        };
+
+        phiUI.setLandName = function(landName) {
+            landName = landName.split('<').join('&lt;');
+            landName = landName.split('&').join('&amp;');
+            $('#land').text(landName);
+        };
 
         //set initial map and object
-        prevMapData.mapChipList = [];
+        currentMapData.mapChipList = [];
         for (var i = 0; i < INITIAL_MAP_LIST.length; i++) {
-            prevMapData.mapChipList.push({
+            currentMapData.mapChipList.push({
                 chip: INITIAL_MAP_LIST[i],
                 status: {
                     itemType: i === 23 ? 6 : 0,
@@ -293,7 +312,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
             });
         }
 
-        prevObjectList = [{
+        currentObjectList = [{
             type: 'character',
             id: '0',
             x: 3,

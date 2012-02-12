@@ -198,7 +198,10 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'mapset':
                     phiUI.setMapChipType(command.data);
                     break;
-
+                case 'ex-notice':
+                    if (command.data[0] === 'area') phiUI.setAreaName(command.data[1]);
+                    if (command.data[0] === 'land') phiUI.setLandName(command.data[1]);
+                    break;
 
                 //should deal with later
                 case 'priv':
@@ -233,7 +236,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'mapset-define':
                 case 'guard':
                 case 'end-gd':
-                case 'ex-notice':
                     break;
 
                 //should not receive

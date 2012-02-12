@@ -74,6 +74,10 @@
   clear: left;
 }
 
+#place {
+    clear: left;
+}
+
 #text {
     width: 800px;
 }
