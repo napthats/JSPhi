@@ -123,7 +123,6 @@ $(document).ready(function() {
         ws.send('#ex-switch ex-move-recv=true');
         ws.send('#ex-switch ex-list-mode-end=true');
         ws.send('#ex-switch ex-disp-magic=false');
-        ws.send('floor item');
         //end test
     };
 
@@ -190,17 +189,22 @@ $(document).ready(function() {
     //    }
     //};
 
-    var readPhircCookie = function() {
+    NS_JSPHI.readCookie = function(key){
         var allcookies = document.cookie;
-        var pos = allcookies.indexOf('phirc=');
+        var pos = allcookies.indexOf(key + '=');
         var value;
         if (pos !== -1) {
-            var start = pos + 6;
+            var start = pos + key.length + 1;
             var end = allcookies.indexOf(';', start);
             if (end === -1) end = allcookies.length;
             value = allcookies.substring(start, end);
             value = decodeURIComponent(value);
         }
+        return value;
+    };
+
+    var readPhircCookie = function() {
+        var value = NS_JSPHI.readCookie('phirc');
         if (!value) return;
         var phircList = [];
         var _phircList = value.split(',');

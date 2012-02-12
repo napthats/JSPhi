@@ -48,6 +48,13 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
     var ST_CAST_COMPLETE = '22';
     var ST_ATTACK = '01';
     var ST_DEFENCE = '02';
+    var DEFAULT_MAP_SCALE = 1;
+    var DEFAULT_LOG_WIDTH = 800;
+    var DEFAULT_LOG_HEIGHT = 400;
+    var COOKIE_MAP_SCALE = 'map_scale';
+    var COOKIE_LOG_WIDTH = 'log_width';
+    var COOKIE_LOG_HEIGHT = 'log_height';
+
 
     ns.makePhiUI = function() {
         var phiUI = {};
@@ -390,12 +397,24 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         });
 
         $('#apply_options').click(function(e) {
-            phiUI.changeMapScale($('#map_size').val());
-            $('#log').css('height', $('#log_height').val() + 'px');
+            var mapScale = Number($('#map_scale').val());
+            var logHeight = Number($('#log_height').val());
+            var logWidth = Number($('#log_width').val());
+
+            if (!mapScale || !logHeight || !logWidth) {
+                phiUI.showErrorMessage('Please set options correctly.');
+                return;
+            }
+
+            phiUI.changeMapScale(mapScale);
+            $('#log').css('height', logHeight + 'px');
+            $('#log').css('width', logWidth + 'px');
+
+            document.cookie = COOKIE_MAP_SCALE + '=' + mapScale + '; max-age=' + (60*60*24*365*10);
+            document.cookie = COOKIE_LOG_HEIGHT + '=' + logHeight + '; max-age=' + (60*60*24*365*10);
+            document.cookie = COOKIE_LOG_WIDTH + '=' + logWidth + '; max-age=' + (60*60*24*365*10);
         });
 
-        $('#map_size').val('1');
-        $('#log_height').val('400');
         $('#newuser_name').val('name');
         $('#newuser_ip_port').val('napthats.com:20017');
         $('#phirc_user_id').val('guest2');
@@ -405,6 +424,30 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
         ctx.canvas.height = CANVAS_HEIGHT_DEFAULT;
         $('#map').append(ctx.canvas);
         ctx.font = FONT_DEFAULT;
+
+        var initialMapScale = 0;
+        if (initialMapScale = ns.readCookie(COOKIE_MAP_SCALE)) {
+            $('#map_scale').val(initialMapScale);
+        }
+        else {
+            $('#map_scale').val(DEFAULT_MAP_SCALE);
+        }
+        var initialLogHeight = 0;
+        if (initialLogHeight = ns.readCookie(COOKIE_LOG_HEIGHT)) {
+            $('#log_height').val(initialLogHeight);
+        }
+        else {
+            $('#log_height').val(DEFAULT_LOG_HEIGHT);
+        }
+        var initialLogWidth = 0;
+        if (initialLogWidth = ns.readCookie(COOKIE_LOG_WIDTH)) {
+            $('#log_width').val(initialLogWidth);
+        }
+        else {
+            $('#log_width').val(DEFAULT_LOG_WIDTH);
+        }
+        $('#apply_options').click();
+
 
         return phiUI;
     };

@@ -16,11 +16,16 @@
     clear: left;
  }
 
-#map_size {
+
+#map_scale {
     width: 30px;
 }
 
 #log_height {
+    width: 30px;
+}
+
+#log_width {
     width: 30px;
 }
 
