@@ -145,7 +145,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
 
         var normalExec = function(command) {
             switch (command.type) {
-                //special command from Jetty or normal message
+                //normal message or special command from Jetty
                 case TYPE_NORMAL_MESSAGE:
                     phiUI.showMessage(command.data);
                     break;
@@ -160,16 +160,6 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     break;
                 case 'lag':
                     ws.send('#end-lag');
-                    break;
-                case 'status':
-                    //test
-                    //phiUI.setUserStatus(command.data);
-                    //end test
-                    break;
-                case 'cond':
-                    //test
-                    //phiUI.setUserCond(command.data);
-                    //end test
                     break;
                 case 'x':
                     phiUI.showClientMessage('Forced disconnection.');
@@ -202,19 +192,17 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     if (command.data[0] === 'area') phiUI.setAreaName(command.data[1]);
                     if (command.data[0] === 'land') phiUI.setLandName(command.data[1]);
                     break;
-
-                //should deal with later
-                case 'priv':
-                    phiUI.showErrorMessage('Not support priv.');
-                    break;
-                case 'ex-map':
-                    //phiUI.showErrorMessage('not support ex-map.');
-                    break;
-                case 'ex-switch':
-                    //phiUI.showErrorMessage('not support ex-switch.');
-                    break;
                 case 'ex-eagleeye':
-                    phiUI.showErrorMessage('Not support eagleeye.');
+                    if(command.data.length === 0) break;
+                    var eagleeyeMapSize = parseInt(command.data[0].slice(2, 4));
+                    for (var i = 0; i < command.data.length; i++) {
+                        var line = '';
+                        for (var j = 0; j < eagleeyeMapSize; j++) {
+                            line += command.data[i].charAt(8 + j * 2);
+                            line += ' ';
+                        }
+                        phiUI.showClientMessage(line);
+                    }
                     break;
 
                 //just ignore
@@ -237,8 +225,27 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                 case 'guard':
                 case 'end-gd':
                     break;
+                case 'status':
+                    //test
+                    //phiUI.setUserStatus(command.data);
+                    //end test
+                    break;
+                case 'cond':
+                    //test
+                    //phiUI.setUserCond(command.data);
+                    //end test
+                    break;
+                case 'ex-map':
+                    //phiUI.showErrorMessage('not support ex-map.');
+                    break;
+                case 'ex-switch':
+                    //phiUI.showErrorMessage('not support ex-switch.');
+                    break;
 
                 //should not receive
+                case 'priv':
+                    phiUI.showErrorMessage('Not support #priv protocol.');
+                    break;
                 case 'set-user-id':
                     phiUI.showClientMessage('Unexpected registration command.');
                     break;

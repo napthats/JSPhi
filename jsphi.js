@@ -39,7 +39,7 @@ $(document).ready(function() {
         88: ['put'],
         89: ['y'],
         90: ['get'],
-        96: ['check'],
+        96: ['check', 'look'],
         97: ['hit'],
         98: ['go b'],
         99: ['cast'],

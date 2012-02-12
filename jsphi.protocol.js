@@ -91,7 +91,7 @@ if (!com.napthats.jsphi) com.napthats.jsphi = {};
                     return makeErrorMessage([command, parameters])
 
                 //not support eagleeye yet
-                case 'ex-eageleeye':
+                case 'ex-eagleeye':
                     if (parameters === 'end') {
                         result.data = multilineMessageLog;
                         endMultilineMode();
